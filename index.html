@@ -104,7 +104,7 @@ button{font:inherit}
 
 /* ===== En-tête ===== */
 .topbar{
-  position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+  position:relative;z-index:40;
   display:flex;align-items:center;gap:14px;
   min-height:var(--topbar-h);padding:8px 18px;
   background:linear-gradient(180deg,var(--armor-hi),var(--armor));
@@ -144,11 +144,6 @@ button{font:inherit}
 .proto{border:1.5px solid var(--signal);color:var(--signal);font-weight:600;padding:1px 8px}
 @media (max-width:520px){ .topbar .since,.topbar .proto{display:none} .topbar{gap:10px;padding:8px 12px} .insignia,.insignia svg{height:40px} .insignia img{height:50px;margin:-5px 0} }
 
-/* En-tête masqué en descendant, réaffiché en remontant */
-.topbar{transition:transform .25s ease}
-.topbar.is-hidden{transform:translateY(calc(-100% - env(safe-area-inset-top,0px) - 2px))}
-@media (prefers-reduced-motion:reduce){ .topbar{transition:none} }
-
 /* ===== Navigation ===== */
 .dock{
   position:fixed;left:0;right:0;bottom:0;z-index:30;
@@ -176,11 +171,11 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 @media (min-width:900px){
   .shell{display:grid;grid-template-columns:236px minmax(0,1fr);align-items:start}
   .dock{
-    position:sticky;top:calc(var(--topbar-h) + 4px + env(safe-area-inset-top,0px));
+    position:sticky;top:env(safe-area-inset-top,0px);
     left:auto;right:auto;bottom:auto;
     display:flex;flex-direction:column;align-items:stretch;gap:4px;
     padding:22px 14px;border-top:0;border-right:3px solid var(--unit);
-    min-height:calc(100vh - var(--topbar-h) - 4px);
+    min-height:100vh;
   }
   .dock button{flex-direction:row;justify-content:flex-start;gap:12px;font-size:.95rem;min-height:46px;padding:8px 12px}
   .dock button[aria-current="page"]{background:var(--unit-wash);box-shadow:inset 3px 0 0 var(--nav-active)}
@@ -188,8 +183,6 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
   .dock .new .lbl-short{display:none}
   .dock .new .lbl-long{display:inline}
   main{padding:26px 32px 48px}
-  .dock{transition:top .25s ease}
-  body.hdr-hidden .dock{top:env(safe-area-inset-top,0px)}
 }
 
 /* ===== Vues ===== */
@@ -238,7 +231,7 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 .holo-head strong{color:var(--holo);font-weight:600;font-size:.95rem}
 .holo-main{display:flex;flex-direction:column;min-width:0}
 .holo-side{min-width:0}
-.bike{width:100%;height:auto;display:block;max-height:440px;margin:auto 0}
+.bike{width:100%;height:auto;display:block;max-height:440px;margin:auto 0;-webkit-tap-highlight-color:transparent}
 .bike .hull *{fill:none;stroke:var(--holo);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
 .bike .hull .thin{stroke-width:1.3;opacity:.62}
 .bike .hull .fill-soft{fill:rgba(127,213,255,.08)}
@@ -278,10 +271,14 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 }
 
 .readout{padding:6px 6px 12px;border-bottom:1px solid var(--holo-faint)}
+.ro-back{appearance:none;display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 12px;min-height:38px;background:rgba(127,213,255,.1);border:1px solid rgba(127,213,255,.45);color:var(--holo);font:inherit;font-size:.85rem;font-weight:600;cursor:pointer}
+.ro-back span{font-size:1.2rem;line-height:1}
+.ro-back:hover{background:rgba(127,213,255,.2)}
+.ro-back:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .ro-name{font-size:1.65rem;line-height:1.1;color:var(--holo)}
 .ro-amt{font-size:1.3rem;font-weight:600;color:#E6F6FF;margin-top:2px}
 .ro-meta,.ro-last{font-size:.85rem;color:var(--holo-txt);margin-top:3px}
-.syslist{display:grid;gap:2px;padding-top:8px}
+.syslist{display:grid;gap:2px;padding-top:8px;position:relative}
 .sys{
   appearance:none;background:none;border:0;color:var(--holo);text-align:left;cursor:pointer;
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:7px 8px;
@@ -293,6 +290,7 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 .sys.is-sel{background:rgba(127,213,255,.11);box-shadow:inset 3px 0 0 var(--holo)}
 .sys.is-sel .sys-v{color:#E6F6FF}
 .sys:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.sys-all > span:first-child{font-weight:700}
 @media (max-width:639px){
   .syslist{display:flex;overflow-x:auto;gap:6px;padding:8px 0 6px;scrollbar-width:thin}
   .sys{flex:none;min-width:150px;border:1px solid var(--holo-faint)}
@@ -326,7 +324,8 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 .pie-legend i{width:12px;height:12px;display:block}
 .pie-legend b{font-weight:600;white-space:nowrap}
 .pie-legend .pc{text-align:right;color:var(--ink-soft);font-size:.78rem}
-@media (max-width:380px){ .pie-wrap{grid-template-columns:1fr} .pie{max-width:180px;margin:0 auto} }
+.pie-legend li > span:nth-child(2){overflow-wrap:anywhere;line-height:1.25}
+@media (max-width:599px){ .pie-wrap{grid-template-columns:1fr;gap:12px} .pie{max-width:190px;margin:0 auto} }
 .sp-line{fill:none;stroke:var(--unit);stroke-width:2;vector-effect:non-scaling-stroke}
 .sp-area{fill:var(--unit-wash)}
 .kpi dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin:0;border-top:1px solid var(--seam);padding-top:12px}
@@ -599,6 +598,16 @@ body.is-demo .db-only{display:none}
 .fac-share{appearance:none;background:none;border:0;color:var(--unit);font-weight:600;font-size:.82rem;cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:3px}
 .fac{grid-template-columns:22px minmax(0,1fr) auto auto auto}
 
+/* ===== Documentation technique ===== */
+.docs-plate{margin-top:24px;max-width:900px}
+.doc{display:grid;grid-template-columns:22px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:12px;background:var(--armor-in);border:1.5px solid var(--seam);margin-bottom:6px}
+.doc svg{width:20px;height:20px;color:var(--unit)}
+.doc-empty{margin:0 0 10px}
+.doc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--seam)}
+.doc-row:last-child{border-bottom:0}
+.doc-title{font:inherit;font-size:.95rem;min-height:42px;padding:8px 10px;width:100%;background:var(--armor-in);color:var(--ink);border:1.5px solid var(--seam);border-radius:0;color-scheme:light}
+.doc-title:focus-visible{outline:3px solid var(--focus);outline-offset:0;border-color:var(--unit)}
+
 /* ===== Message ===== */
 .toast{
   position:fixed;left:50%;transform:translate(-50%,12px);z-index:60;
@@ -786,23 +795,10 @@ body.is-demo .db-only{display:none}
       <div class="sub-head"><h3 class="stencil">Journal des opérations</h3><span id="ops-sum"></span></div>
       <div id="ops"></div>
 
-      <details class="plate memo">
-        <summary><span class="plate-t">Aide-mémoire technique</span></summary>
-        <dl class="memo-list">
-          <dt>Huile de boîte</dt><dd>SAE 10W30 (SE). Vidange 0,75 L, 0,8 L à sec. Vis de vidange : 15 N·m.</dd>
-          <dt>Huile 2 temps</dt><dd>JASO FC (ou ISO EG-C, EG-D). Réservoir Autolube : 1,2 L.</dd>
-          <dt>Bougie</dt><dd>NGK BR9ES, écartement 0,7 à 0,8 mm, serrage 20 N·m.</dd>
-          <dt>Refroidissement</dt><dd>Antigel éthylène-glycol pour moteur alu, mélange 1:1. Circuit 1,05 L, vase d'expansion 0,35 L. Vis de vidange : 8 N·m.</dd>
-          <dt>Filtre à air</dt><dd>Élément en mousse, lavé au solvant puis huilé à l'huile 2 temps, humide mais pas dégoulinant.</dd>
-          <dt>Chaîne</dt><dd>Flèche de 25 à 40 mm. Chaîne à joints : nettoyage au pétrole, graissage à l'huile moteur SAE 30 à 50.</dd>
-          <dt>Pneus</dt><dd>AV 100/90-18, AR 130/80-17. Pression à froid : 1,75 / 2,00 bar jusqu'à 90 kg de charge, 1,75 / 2,25 bar au-delà.</dd>
-          <dt>Freins</dt><dd>DOT 4 (DOT 3 toléré à l'avant). Garde au levier : 2 à 5 mm.</dd>
-          <dt>Réglages</dt><dd>Ralenti 1 300 à 1 500 tr/min. Jeu de poignée de gaz 3 à 5 mm. Garde du levier d'embrayage 10 à 15 mm.</dd>
-          <dt>Couples de roues</dt><dd>Axe de roue AV : 59 N·m. Écrou de roue AR : 104 N·m.</dd>
-          <dt>Rodage</dt><dd>0 à 500 km : rester sous 6 000 tr/min. 500 à 1 000 km : pas de régime prolongé au-dessus de 7 000 tr/min. Vidange de boîte à 1 000 km.</dd>
-        </dl>
-        <p class="small">Source : manuel du propriétaire Yamaha TDR125, réf. 5AE-28199-E3, août 1999.</p>
-      </details>
+      <article class="plate docs-plate">
+        <h3 class="plate-t">Documentation technique</h3>
+        <div id="docs-list"></div>
+      </article>
     </section>
 
     <!-- ===== RÉGLAGES ===== -->
@@ -819,6 +815,17 @@ body.is-demo .db-only{display:none}
               <label class="f">Début du suivi<input id="p-debut" type="date"></label>
             </div>
           </div>
+        </article>
+        <article class="plate">
+          <h3 class="plate-t">Documentation technique</h3>
+          <p class="small">PDF consultables depuis l'onglet Entretien : RMT, manuel du propriétaire, catalogue de pièces… Tu peux renommer chaque document. Ils ne sont pas inclus dans la sauvegarde : garde les fichiers d'origine sur ton Drive ou ton PC.</p>
+          <div id="docs-admin"></div>
+          <div class="btn-row">
+            <button type="button" class="btn-ghost" id="doc-add">Ajouter des PDF</button>
+            <input type="file" id="doc-file" accept="application/pdf,.pdf" multiple hidden>
+          </div>
+          <span class="det-busy" id="doc-busy" aria-live="polite"></span>
+          <p class="err" id="doc-err" role="alert"></p>
         </article>
         <article class="plate">
           <h3 class="plate-t">Insigne</h3>
@@ -1029,7 +1036,7 @@ const S = {
   debut: new Date(2026,2,1),
   nom: "la Reine",
   insigne: "officiel",
-  sel: "Moteur",
+  sel: null,
   fCat: null, fU: null, q: "",
   view: "rapport", depAll: false, nextOp: 100
 };
@@ -1077,6 +1084,17 @@ function renderMarkers(){
 }
 
 function renderReadout(){
+  if(!S.sel){
+    const total = sum(S.entries), m = byCat();
+    const nsys = Object.values(m).filter(r => r.n > 0).length;
+    const last = [...S.entries].sort(byDateDesc)[0];
+    $("#readout").innerHTML =
+      `<div class="ro-name stencil">Tous les systèmes</div>
+       <div class="ro-amt">${eur(total)}</div>
+       <div class="ro-meta">${plural(S.entries.length,"commande")} sur ${plural(nsys,"système")}</div>
+       ${last ? `<div class="ro-last">Dernière : ${esc(last.objet)}, ${dFull(last.date)}</div>` : ""}`;
+    return;
+  }
   const r = byCat()[S.sel];
   const total = sum(S.entries);
   const pct = total ? Math.round(r.total/total*100) : 0;
@@ -1100,14 +1118,18 @@ function renderSyslist(){
   }).join("");
 }
 
+/* Un appui sur un système le sélectionne ; un second appui, ou un appui sur la moto hors des cercles, revient au total */
 function select(cat){
-  S.sel = cat;
+  S.sel = (cat === "__all" || cat === S.sel) ? null : cat;
   document.querySelectorAll(".mk,.sys").forEach(el => {
-    const on = el.dataset.cat === cat;
+    const on = !!S.sel && el.dataset.cat === S.sel;
     el.classList.toggle("is-sel", on);
     el.setAttribute("aria-pressed", on);
   });
   renderReadout();
+  /* Sur téléphone, la rangée de systèmes défile pour montrer le bouton actif */
+  const list = $("#syslist"), act = list.querySelector(".sys.is-sel");
+  if(list.scrollWidth > list.clientWidth) list.scrollTo({left:act ? Math.max(0, act.offsetLeft - 8) : 0, behavior:"smooth"});
 }
 
 /* ---------- Chiffres clés ---------- */
@@ -1482,6 +1504,9 @@ $("#markers").addEventListener("keydown", e => {
   if(g && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); select(g.dataset.cat); }
 });
 $("#syslist").addEventListener("click", e => { const b = e.target.closest(".sys"); if(b) select(b.dataset.cat); });
+/* Toucher la moto en dehors des cercles ramène au total de tous les systèmes */
+$("#bike").addEventListener("click", e => { if(S.sel && !e.target.closest(".mk")) select("__all"); });
+$("#markers").addEventListener("keydown", e => { if(e.key === "Escape" && S.sel) select("__all"); });
 
 $("#chips").addEventListener("click", e => {
   const b = e.target.closest(".chip"); if(!b) return;
@@ -1518,7 +1543,7 @@ $("#f-cat").innerHTML = [...CATS].map(c => c.id).sort((a,b) => a.localeCompare(b
 $("#btn-new").addEventListener("click", () => {
   if(S.view === "entretien"){ openOp(); return; }
   $("#f-date").value = isoD(new Date());
-  $("#f-cat").value = S.sel;
+  $("#f-cat").value = S.sel || "Moteur";
   $("#f-err").textContent = "";
   if(typeof sheet.showModal === "function") sheet.showModal(); else sheet.setAttribute("open","");
   setTimeout(() => $("#f-objet").focus(), 30);
@@ -1544,7 +1569,6 @@ $("#f-save").addEventListener("click", async () => {
   let id;
   try{ id = await addAchat({d:date, site, prix:Math.round(prix*100)/100, cat, objet, u}); }
   catch(err){ btn.disabled = false; return fail(errMsg(err), btn); }
-  S.sel = cat;
   ["#f-objet","#f-prix","#f-site","#f-fac"].forEach(s => $(s).value = "");
   document.querySelector('input[name="fu"][value="1"]').checked = true;
   sheet.close(); btn.disabled = false;
@@ -1670,14 +1694,15 @@ const IDB = {
   open(){
     return new Promise((res, rej) => {
       if(!("indexedDB" in window)) return rej({code:"no_idb"});
-      const r = indexedDB.open("tdr125", 1);
+      const r = indexedDB.open("tdr125", 2);
       r.onupgradeneeded = () => {
         const d = r.result;
-        ["achats","operations","releves","fichiers"].forEach(n => { if(!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:"id"}); });
+        ["achats","operations","releves","fichiers","docs"].forEach(n => { if(!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:"id"}); });
         if(!d.objectStoreNames.contains("config")) d.createObjectStore("config");
       };
       r.onsuccess = () => { IDB.db = r.result; res(r.result); };
       r.onerror = () => rej({code:"no_idb"});
+      r.onblocked = () => toast("Ferme les autres fenêtres de l'application pour terminer la mise à jour.");
     });
   },
   /* Une transaction : fn(stores) prépare les écritures, la promesse se résout quand tout est écrit */
@@ -1751,6 +1776,7 @@ async function loadAll(){
   S.ops = o.map(x => fromOp(x.id, x)).filter(Boolean);
   S.releves = r.map(x => fromReleve(x.id, x)).filter(Boolean);
   applyConfig(c);
+  await loadDocs();
 }
 /* Demande au navigateur de ne pas effacer ces données en cas de manque de place */
 async function askPersist(){
@@ -1820,6 +1846,81 @@ function confirmClick(btn, run){
   btn.dataset.armed = "1"; btn._label = btn.textContent; btn.textContent = "Confirmer la suppression";
   btn._t = setTimeout(() => { btn.dataset.armed = ""; btn.textContent = btn._label; }, 4000);
 }
+
+/* ---------- Documentation technique (PDF stockés sur l'appareil) ---------- */
+S.docs = [];
+const isPdf = f => f.type === "application/pdf" || /\.pdf$/i.test(f.name || "");
+async function loadDocs(){
+  const d = await IDB.all("docs");
+  S.docs = d.filter(x => x && okAsset(x.id)).map(x => ({id:x.id, titre:String(x.titre || x.nom || "Document"), nom:String(x.nom || "document.pdf"), taille:+x.taille || 0, ajout:+x.ajout || 0}))
+    .sort((a,b) => a.titre.localeCompare(b.titre, "fr"));
+}
+function renderDocs(){
+  $("#docs-list").innerHTML = S.docs.length
+    ? S.docs.map(d => `<div class="doc">${ICON_DOC}<button type="button" class="fac-open" data-doc="${esc(d.id)}">${esc(d.titre)}</button><span class="fac-s">${sizeTxt(d.taille)}</span>${canShareFiles ? `<button type="button" class="fac-share" data-docshare="${esc(d.id)}">Partager</button>` : "<span></span>"}</div>`).join("")
+    : `<p class="small doc-empty">Aucun document pour l'instant. Ajoute tes PDF (RMT, manuel du propriétaire…) dans Réglages.</p><button type="button" class="btn-ghost" data-go="reglages">Ajouter dans Réglages</button>`;
+  $("#docs-admin").innerHTML = S.docs.map(d =>
+    `<div class="doc-row"><input class="doc-title" data-doc="${esc(d.id)}" value="${esc(d.titre)}" aria-label="Titre du document" autocomplete="off"><span class="fac-s">${sizeTxt(d.taille)}</span><button type="button" class="fac-del" data-docdel="${esc(d.id)}">Retirer</button></div>`
+  ).join("");
+}
+async function addDocs(files){
+  for(const f of files){
+    if(!isPdf(f)) throw {code:"doc_type"};
+    if(f.size > 200*1024*1024) throw {code:"doc_size"};
+    const rec = {id:uid(), titre:String(f.name || "Document").replace(/\.pdf$/i, ""), nom:f.name || "document.pdf", taille:f.size, ajout:Date.now(), blob:f.slice(0, f.size, "application/pdf")};
+    await IDB.write(["docs"], st => st.docs.put(rec));
+  }
+  await loadDocs(); renderDocs(); renderDataStatus(); askPersist();
+}
+async function openDoc(id, share){
+  try{
+    const rec = await IDB.get("docs", id);
+    if(!rec || !rec.blob) throw {code:"missing"};
+    const name = (rec.titre ? rec.titre.replace(/[\\/:*?"<>|]+/g, " ").trim() : "document") + ".pdf";
+    if(share){
+      await navigator.share({files:[new File([rec.blob], name, {type:"application/pdf"})], title:rec.titre});
+      return;
+    }
+    const url = URL.createObjectURL(rec.blob);
+    const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 120000);
+  }catch(e){ if(e && e.name !== "AbortError") toast("Impossible d'ouvrir ce document sur cet appareil."); }
+}
+$("#doc-add").addEventListener("click", () => { $("#doc-err").textContent = ""; $("#doc-file").click(); });
+$("#doc-file").addEventListener("change", async ev => {
+  const files = [...ev.target.files]; ev.target.value = "";
+  if(!files.length) return;
+  $("#doc-add").disabled = true;
+  $("#doc-busy").textContent = files.length > 1 ? `Enregistrement de ${files.length} documents…` : `Enregistrement de ${files[0].name}…`;
+  try{ await addDocs(files); toast(files.length > 1 ? "Documents ajoutés" : "Document ajouté"); }
+  catch(e){
+    await loadDocs(); renderDocs();
+    $("#doc-err").textContent = e && e.code === "doc_type" ? "Seuls les fichiers PDF sont acceptés."
+      : e && e.code === "doc_size" ? "Document trop lourd : 200 Mo maximum." : errMsg(e);
+  }
+  finally{ $("#doc-add").disabled = false; $("#doc-busy").textContent = ""; }
+});
+$("#docs-admin").addEventListener("change", async ev => {
+  const inp = ev.target.closest(".doc-title"); if(!inp) return;
+  const titre = inp.value.trim(); const id = inp.dataset.doc;
+  if(!titre){ const d = S.docs.find(x => x.id === id); inp.value = d ? d.titre : ""; return; }
+  try{
+    const rec = await IDB.get("docs", id); if(!rec) return;
+    await IDB.write(["docs"], st => st.docs.put({...rec, titre}));
+    await loadDocs(); renderDocs(); toast("Titre enregistré");
+  }catch(e){ toast(errMsg(e)); }
+});
+$("#docs-admin").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-docdel]"); if(!b) return;
+  confirmClick(b, async () => {
+    try{ await IDB.write(["docs"], st => st.docs.delete(b.dataset.docdel)); await loadDocs(); renderDocs(); renderDataStatus(); toast("Document retiré"); }
+    catch(e){ toast(errMsg(e)); }
+  });
+});
+$("#docs-list").addEventListener("click", ev => {
+  const o = ev.target.closest("[data-doc]"); if(o){ openDoc(o.dataset.doc, false); return; }
+  const sh = ev.target.closest("[data-docshare]"); if(sh) openDoc(sh.dataset.docshare, true);
+});
 
 /* ---------- Sauvegarde : export et import d'un fichier ---------- */
 const BACKUP_FORMAT = "tdr125-sauvegarde";
@@ -1931,7 +2032,8 @@ window.addEventListener("appinstalled", () => { $("#btn-install").hidden = true;
 function renderDataStatus(){
   const nf = S.entries.reduce((t,e) => t + e.factures.length, 0);
   const bytes = S.entries.reduce((t,e) => t + e.factures.reduce((u,f) => u + (+f.taille || 0), 0), 0);
-  $("#data-status").textContent = `Stocké sur cet appareil : ${plural(S.entries.length,"commande")}, ${plural(nf,"facture")}${nf ? ` (${sizeTxt(bytes)})` : ""}, ${plural(S.ops.length,"opération")} et ${plural(S.releves.length,"relevé")}.`
+  const docBytes = (S.docs || []).reduce((t,d) => t + d.taille, 0);
+  $("#data-status").textContent = `Stocké sur cet appareil : ${plural(S.entries.length,"commande")}, ${plural(nf,"facture")}${nf ? ` (${sizeTxt(bytes)})` : ""}, ${plural(S.ops.length,"opération")}, ${plural(S.releves.length,"relevé")}${S.docs && S.docs.length ? ` et ${plural(S.docs.length,"document")} technique${S.docs.length > 1 ? "s" : ""} (${sizeTxt(docBytes)})` : ""}.`
     + (S.persisted === true ? " Stockage protégé contre le nettoyage automatique." : S.persisted === false ? " Le navigateur n'a pas accordé la protection du stockage : exporte régulièrement." : "");
   const d = S.lastExport ? daysSince(S.lastExport) : null;
   $("#backup-info").textContent = S.lastExport
@@ -2029,22 +2131,6 @@ $("#odo-last").addEventListener("click", ev => {
   confirmClick(b, () => delDoc("releves", b.dataset.rel, "releves").then(() => toast("Relevé annulé")).catch(err => toast(errMsg(err))));
 });
 
-/* En-tête : se cache quand on descend, revient dès qu'on remonte ou en haut de page */
-(() => {
-  const bar = $(".topbar");
-  let lastY = window.scrollY, ticking = false;
-  const setHidden = h => { bar.classList.toggle("is-hidden", h); document.body.classList.toggle("hdr-hidden", h); };
-  function update(){
-    ticking = false;
-    const y = window.scrollY, dy = y - lastY;
-    if(document.querySelector("dialog[open]")){ lastY = y; return; }
-    if(y < 60){ setHidden(false); lastY = y; return; }
-    if(dy > 8){ setHidden(true); lastY = y; }
-    else if(dy < -8){ setHidden(false); lastY = y; }
-  }
-  window.addEventListener("scroll", () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
-})();
-
 /* ---------- Démarrage ---------- */
 fitBike();
 renderInsignia();
@@ -2075,7 +2161,7 @@ setTimeout(closeSplash, 12000);
 async function boot(){
   try{ await IDB.open(); await loadAll(); }
   catch(e){ toast(errMsg(e)); }
-  syncParamInputs(); renderInsignia(); renderAll(); renderDataStatus();
+  syncParamInputs(); renderInsignia(); renderAll(); renderDataStatus(); renderDocs();
   if(hasData()) askPersist();
   dataReady = true; maybeCloseSplash();
 }
