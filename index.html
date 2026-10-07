@@ -307,7 +307,26 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 
 /* ===== Chiffres clés ===== */
 .kpi .big{font-size:clamp(2.6rem,9vw,3.7rem);line-height:1;color:var(--unit-deep);margin:2px 0 10px}
-.spark{width:100%;height:56px;display:block;margin-bottom:14px}
+.cumul{margin:4px 0 16px}
+.cumul-leg{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--ink-soft);margin-bottom:8px}
+.cumul-leg i{display:block;width:18px;height:3px;background:var(--unit)}
+.cumul-grid{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:96px auto;column-gap:8px}
+.cumul-y{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;font-size:.68rem;color:var(--ink-soft);line-height:1;white-space:nowrap;margin:-4px 0}
+.cumul-plot{position:relative;border-left:1px solid var(--seam);border-bottom:1px solid var(--seam);background:linear-gradient(var(--seam),var(--seam)) 0 0/100% 1px no-repeat,linear-gradient(var(--seam),var(--seam)) 0 50%/100% 1px no-repeat}
+.cumul-plot svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cumul-x{position:relative;height:18px;margin-top:4px;font-size:.68rem;color:var(--ink-soft)}
+.cumul-x span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.pie-sub{margin:-6px 0 10px}
+.pie-wrap{display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr);gap:16px;align-items:center}
+.pie{width:100%;height:auto;display:block}
+.pie path,.pie circle{stroke:var(--armor-hi);stroke-width:.018;stroke-linejoin:round}
+.pie-legend{list-style:none;margin:0;padding:0}
+.pie-legend li{display:grid;grid-template-columns:12px minmax(0,1fr) auto 2.8em;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--seam);font-size:.84rem}
+.pie-legend li:last-child{border-bottom:0}
+.pie-legend i{width:12px;height:12px;display:block}
+.pie-legend b{font-weight:600;white-space:nowrap}
+.pie-legend .pc{text-align:right;color:var(--ink-soft);font-size:.78rem}
+@media (max-width:380px){ .pie-wrap{grid-template-columns:1fr} .pie{max-width:180px;margin:0 auto} }
 .sp-line{fill:none;stroke:var(--unit);stroke-width:2;vector-effect:non-scaling-stroke}
 .sp-area{fill:var(--unit-wash)}
 .kpi dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin:0;border-top:1px solid var(--seam);padding-top:12px}
@@ -545,7 +564,7 @@ details.memo[open] summary::after{content:"Masquer"}
 .f textarea{font:inherit;font-weight:400;font-size:1rem;padding:9px 12px;width:100%;min-height:76px;resize:vertical;background:var(--armor-in);color:var(--ink);border:1.5px solid var(--seam);border-radius:0;color-scheme:light}
 .f textarea:focus-visible{outline:3px solid var(--focus);outline-offset:0;border-color:var(--unit)}
 
-/* ===== Détail d'une réquisition, factures ===== */
+/* ===== Détail d'une commande, factures ===== */
 .det-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px 18px;margin:0 0 6px}
 .det-dl dt{font-size:.76rem;color:var(--ink-soft)}
 .det-dl dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
@@ -625,7 +644,7 @@ body.is-demo .db-only{display:none}
     </button>
     <button type="button" class="new" id="btn-new">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      <span class="lbl-short">Ajouter</span><span class="lbl-long">Nouvelle réquisition</span>
+      <span class="lbl-short">Ajouter</span><span class="lbl-long">Nouvelle commande</span>
     </button>
     <button type="button" data-view="entretien">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.9-5.9a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.3-.6-.6-2.3z"/></svg>
@@ -643,7 +662,7 @@ body.is-demo .db-only{display:none}
       <h2 class="sec-title stencil" id="t-rapport">Rapport de situation</h2>
       <p class="lede" id="rapport-date"></p>
       <div class="note-box" id="welcome-note" hidden>
-        <p>Aucune donnée sur cet appareil pour l'instant. Importe ta sauvegarde, ou commence par ajouter une réquisition.</p>
+        <p>Aucune donnée sur cet appareil pour l'instant. Importe ta sauvegarde, ou commence par ajouter une commande.</p>
         <button type="button" class="btn-ghost" data-import>Importer une sauvegarde</button>
       </div>
       <div class="note-box warn" id="backup-note" hidden>
@@ -654,7 +673,7 @@ body.is-demo .db-only{display:none}
       <div class="holo">
         <div class="brackets" aria-hidden="true"></div>
         <div class="holo-main">
-          <div class="holo-head"><strong>Dépenses par système</strong><span>Touchez un point pour le détail</span></div>
+          <div class="holo-head"><strong>Dépenses par système</strong></div>
           <svg class="bike" id="bike" viewBox="-30 0 920 430" role="group" aria-label="Schéma de la moto, un point par système">
             <g class="hull" aria-hidden="true">
               <line class="ground" x1="-20" y1="409" x2="880" y2="409"/>
@@ -672,13 +691,21 @@ body.is-demo .db-only{display:none}
 
       <div class="grid2">
         <article class="plate kpi">
-          <h3 class="plate-t">Total réparations</h3>
+          <h3 class="plate-t">Total des réparations</h3>
           <div class="big stencil" id="k-total"></div>
-          <svg class="spark" id="spark" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <figure class="cumul">
+            <figcaption class="cumul-leg"><i aria-hidden="true"></i><span id="cumul-cap">Cumul des dépenses</span></figcaption>
+            <div class="cumul-grid">
+              <div class="cumul-y" aria-hidden="true"><span id="cy-max"></span><span id="cy-mid"></span><span>0 €</span></div>
+              <div class="cumul-plot"><svg id="spark" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+              <span></span>
+              <div class="cumul-x" id="cumul-x" aria-hidden="true"></div>
+            </div>
+          </figure>
           <dl>
             <div><dt id="k-full-l"></dt><dd id="k-full"></dd></div>
             <div><dt id="k-avg-l"></dt><dd id="k-avg"></dd></div>
-            <div><dt>Réquisitions</dt><dd id="k-n"></dd></div>
+            <div><dt>Commandes</dt><dd id="k-n"></dd></div>
           </dl>
         </article>
 
@@ -689,9 +716,12 @@ body.is-demo .db-only{display:none}
         </article>
 
         <article class="plate">
-          <h3 class="plate-t">Utilité des dépenses</h3>
-          <div class="prio-bar" id="prio-bar" aria-hidden="true"></div>
-          <ul class="prio-legend" id="prio-legend"></ul>
+          <h3 class="plate-t">Répartition des commandes</h3>
+          <p class="small pie-sub">Par type de dépense</p>
+          <div class="pie-wrap">
+            <svg class="pie" id="pie" viewBox="-1.02 -1.02 2.04 2.04" aria-hidden="true"></svg>
+            <ul class="pie-legend" id="pie-legend"></ul>
+          </div>
         </article>
 
         <article class="plate">
@@ -700,13 +730,19 @@ body.is-demo .db-only{display:none}
         </article>
 
         <article class="plate">
-          <h3 class="plate-t">Dernières réquisitions</h3>
+          <h3 class="plate-t">Utilité des dépenses</h3>
+          <div class="prio-bar" id="prio-bar" aria-hidden="true"></div>
+          <ul class="prio-legend" id="prio-legend"></ul>
+        </article>
+
+        <article class="plate">
+          <h3 class="plate-t">Dernières commandes</h3>
           <div id="recent"></div>
           <button type="button" class="btn-ghost plate-link" data-go="journal">Ouvrir le journal</button>
         </article>
 
         <article class="plate">
-          <h3 class="plate-t">Dépôts de ravitaillement</h3>
+          <h3 class="plate-t">Fournisseurs</h3>
           <div id="dlist"></div>
           <button type="button" class="btn-ghost plate-link" id="dep-more"></button>
         </article>
@@ -715,7 +751,7 @@ body.is-demo .db-only{display:none}
 
     <!-- ===== JOURNAL ===== -->
     <section class="view" id="v-journal" aria-labelledby="t-journal">
-      <h2 class="sec-title stencil" id="t-journal">Journal des réquisitions</h2>
+      <h2 class="sec-title stencil" id="t-journal">Journal des commandes</h2>
       <div class="filters">
         <label class="search"><span class="sr">Rechercher</span><input id="q" type="search" placeholder="Chercher une pièce ou un fournisseur" autocomplete="off"></label>
         <div class="chips" id="chips" role="group" aria-label="Filtrer par système"></div>
@@ -814,10 +850,10 @@ body.is-demo .db-only{display:none}
   </main>
 </div>
 
-<!-- ===== Feuille : nouvelle réquisition ===== -->
+<!-- ===== Feuille : nouvelle commande ===== -->
 <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
   <div class="sheet-head">
-    <h2 class="stencil" id="sheet-title">Nouvelle réquisition</h2>
+    <h2 class="stencil" id="sheet-title">Nouvelle commande</h2>
     <button type="button" class="x" id="sheet-close" aria-label="Fermer">×</button>
   </div>
   <div class="sheet-body">
@@ -843,7 +879,7 @@ body.is-demo .db-only{display:none}
     </div>
   </div>
   <div class="sheet-foot">
-    <button type="button" class="btn-primary" id="f-save">Enregistrer la réquisition</button>
+    <button type="button" class="btn-primary" id="f-save">Enregistrer la commande</button>
     <p class="small demo-only">Démonstration : l'ajout reste visible jusqu'à la fermeture de la page.</p>
   </div>
 </dialog>
@@ -900,10 +936,10 @@ body.is-demo .db-only{display:none}
   </div>
 </dialog>
 
-<!-- ===== Feuille : détail d'une réquisition ===== -->
+<!-- ===== Feuille : détail d'une commande ===== -->
 <dialog class="sheet" id="sheet-det" aria-labelledby="det-title">
   <div class="sheet-head">
-    <h2 class="stencil" id="det-title">Réquisition</h2>
+    <h2 class="stencil" id="det-title">Commande</h2>
     <button type="button" class="x" data-close aria-label="Fermer">×</button>
   </div>
   <div class="sheet-body">
@@ -920,7 +956,7 @@ body.is-demo .db-only{display:none}
     <p class="err" id="det-err" role="alert"></p>
   </div>
   <div class="sheet-foot">
-    <button type="button" class="btn-danger" id="det-del">Supprimer la réquisition</button>
+    <button type="button" class="btn-danger" id="det-del">Supprimer la commande</button>
   </div>
 </dialog>
 
@@ -1047,7 +1083,7 @@ function renderReadout(){
   $("#readout").innerHTML =
     `<div class="ro-name stencil">${esc(S.sel)}</div>
      <div class="ro-amt">${eur(r.total)}</div>
-     <div class="ro-meta">${plural(r.n,"réquisition")}, ${pct} % du total</div>
+     <div class="ro-meta">${plural(r.n,"commande")}, ${pct} % du total</div>
      ${r.last ? `<div class="ro-last">Dernière : ${esc(r.last.objet)}, ${dFull(r.last.date)}</div>` : ""}`;
 }
 
@@ -1090,17 +1126,53 @@ function renderKPI(){
 function renderSpark(){
   const es = [...S.entries].sort((a,b) => a.date - b.date);
   const svg = $("#spark");
-  if(!es.length){ svg.innerHTML = ""; return; }
-  const W=300, H=56;
+  $("#cumul-cap").textContent = `Cumul des dépenses depuis ${S.debut.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}`;
+  if(!es.length){ svg.innerHTML = ""; $("#cy-max").textContent = ""; $("#cy-mid").textContent = ""; $("#cumul-x").innerHTML = ""; return; }
+  const W = 300, H = 100;
   const t0 = Math.min(S.debut.getTime(), es[0].date.getTime());
   const t1 = Math.max(Date.now(), es[es.length-1].date.getTime());
   const total = sum(es) || 1;
   const X = t => ((t - t0)/(t1 - t0))*W;
-  const Y = v => H - 2 - (v/total)*(H - 6);
-  let c = 0, d = `M0 ${H-2}`;
+  const Y = v => H - 1 - (v/total)*(H - 2);
+  let c = 0, d = `M0 ${H-1}`;
   es.forEach(e => { d += ` H${X(e.date.getTime()).toFixed(1)}`; c += e.prix; d += ` V${Y(c).toFixed(1)}`; });
   d += ` H${W}`;
   svg.innerHTML = `<path class="sp-area" d="${d} V${H} H0 Z"/><path class="sp-line" d="${d}"/>`;
+  $("#cy-max").textContent = eur0(total);
+  $("#cy-mid").textContent = eur0(total/2);
+  /* une étiquette par début de mois, une sur deux si la période est longue */
+  const ticks = [], m = new Date(new Date(t0).getFullYear(), new Date(t0).getMonth(), 1);
+  if(m.getTime() < t0) m.setMonth(m.getMonth()+1);
+  while(m.getTime() <= t1){ ticks.push(new Date(m)); m.setMonth(m.getMonth()+1); }
+  const step = ticks.length > 9 ? 2 : 1;
+  $("#cumul-x").innerHTML = ticks.filter((_,i) => i % step === 0)
+    .map(t => `<span style="left:${(X(t.getTime())/W*100).toFixed(2)}%">${t.toLocaleDateString("fr-FR",{month:"short"})}</span>`).join("");
+}
+
+/* ---------- Répartition des commandes (camembert) ---------- */
+const CAT_COLORS = {"Moteur":"#1C3E78","Frein":"#2B5DAE","Carburation":"#4FA3D9","Fourche":"#7FD5FF","Cycle":"#8EABD8",
+  "Consommable":"#E89B2D","Esthétique":"#D2611B","Guidon":"#5E6B7A","Pot d'échappement":"#B8C7D9"};
+function renderPie(){
+  const m = {};
+  S.entries.forEach(e => { m[e.cat] = (m[e.cat] || 0) + e.prix; });
+  const rows = Object.entries(m).filter(([,v]) => v > 0).sort((a,b) => b[1] - a[1]);
+  const total = rows.reduce((t,[,v]) => t + v, 0);
+  const svg = $("#pie"), leg = $("#pie-legend");
+  if(!total){ svg.innerHTML = `<circle r="1" fill="var(--seam)"/>`; leg.innerHTML = `<li><span></span><span>Aucune commande</span></li>`; return; }
+  const col = k => CAT_COLORS[k] || "#9AA5B1";
+  if(rows.length === 1) svg.innerHTML = `<circle r="1" fill="${col(rows[0][0])}"/>`;
+  else {
+    let a = -Math.PI/2;
+    svg.innerHTML = rows.map(([k,v]) => {
+      const a2 = a + v/total*2*Math.PI;
+      const p = `M0 0 L${Math.cos(a).toFixed(4)} ${Math.sin(a).toFixed(4)} A1 1 0 ${a2 - a > Math.PI ? 1 : 0} 1 ${Math.cos(a2).toFixed(4)} ${Math.sin(a2).toFixed(4)} Z`;
+      a = a2;
+      return `<path d="${p}" fill="${col(k)}"/>`;
+    }).join("");
+  }
+  leg.innerHTML = rows.map(([k,v]) =>
+    `<li><i style="background:${col(k)}"></i><span>${esc(k)}</span><b>${eur(v)}</b><span class="pc">${Math.round(v/total*100)} %</span></li>`
+  ).join("");
 }
 
 function renderPrio(){
@@ -1178,9 +1250,9 @@ function renderJournal(){
     .filter(e => (!S.fCat || e.cat === S.fCat) && (!S.fU || e.u === S.fU) &&
                  (!q || (e.objet+" "+e.site+" "+e.cat).toLowerCase().includes(q)))
     .sort(byDateDesc);
-  $("#jsum").textContent = `${plural(es.length,"réquisition")}, ${eur(sum(es))}`;
+  $("#jsum").textContent = `${plural(es.length,"commande")}, ${eur(sum(es))}`;
   if(!es.length){
-    $("#jlist").innerHTML = `<div class="empty"><p>Aucune réquisition ne correspond à ces filtres.</p><button type="button" class="btn-ghost" id="clear-f">Effacer les filtres</button></div>`;
+    $("#jlist").innerHTML = `<div class="empty"><p>Aucune commande ne correspond à ces filtres.</p><button type="button" class="btn-ghost" id="clear-f">Effacer les filtres</button></div>`;
     return;
   }
   const groups = [];
@@ -1208,12 +1280,12 @@ function renderDepots(){
   const shown = S.depAll ? rows : rows.slice(0,5);
   const more = $("#dep-more");
   more.hidden = rows.length <= 5;
-  more.textContent = S.depAll ? "Afficher moins" : `Afficher les ${rows.length} dépôts`;
+  more.textContent = S.depAll ? "Afficher moins" : `Afficher les ${rows.length} fournisseurs`;
   $("#dlist").innerHTML = shown.map(r =>
     `<div class="depot">
       <div class="d-top"><span class="d-name">${esc(r.site)}</span><span class="d-val">${eur(r.t)}</span></div>
       <div class="d-bar"><span style="width:${(r.t/max*100).toFixed(1)}%"></span></div>
-      <div class="d-meta">${plural(r.n,"réquisition")}, dernière le ${dFull(r.last)}</div>
+      <div class="d-meta">${plural(r.n,"commande")}, dernière le ${dFull(r.last)}</div>
     </div>`
   ).join("");
   $("#sites").innerHTML = rows.map(r => `<option value="${esc(r.site)}"></option>`).join("");
@@ -1364,13 +1436,13 @@ function renderInsignia(){
 function renderHeader(){
   $("#bike-name").textContent = S.nom ? `Dit : ${S.nom}` : "";
   $("#since").textContent = "Suivi depuis " + S.debut.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-  $("#rapport-date").textContent = "Situation au " + new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  $("#rapport-date").textContent = new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
 }
 
 function renderAll(){
   renderHeader();
   renderMarkers(); renderReadout(); renderSyslist();
-  renderKPI(); renderPrio(); renderMonths(); renderRecent();
+  renderKPI(); renderPie(); renderPrio(); renderMonths(); renderRecent();
   renderChips(); renderJournal(); renderDepots();
   renderMaintSummary(); renderEntretien();
 }
@@ -1384,7 +1456,7 @@ function toast(msg){
 
 function show(view){
   S.view = view;
-  const lbl = view === "entretien" ? "Nouvelle opération" : "Nouvelle réquisition";
+  const lbl = view === "entretien" ? "Nouvelle opération" : "Nouvelle commande";
   $("#btn-new .lbl-long").textContent = lbl;
   $("#btn-new").setAttribute("aria-label", lbl);
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("is-active", v.id === "v-"+view));
@@ -1478,10 +1550,10 @@ $("#f-save").addEventListener("click", async () => {
   sheet.close(); btn.disabled = false;
   scheduleRender();
   if(files.length){
-    toast(`Réquisition enregistrée, envoi de la facture…`);
-    try{ await attachFiles(id, files, []); toast(files.length > 1 ? "Réquisition et factures enregistrées" : "Réquisition et facture enregistrées"); }
-    catch(err){ toast("Réquisition enregistrée, mais la facture n'a pas pu être jointe. " + errMsg(err)); }
-  } else toast(`Réquisition enregistrée : ${objet}, ${eur(prix)}`);
+    toast(`Commande enregistrée, envoi de la facture…`);
+    try{ await attachFiles(id, files, []); toast(files.length > 1 ? "Commande et factures enregistrées" : "Commande et facture enregistrées"); }
+    catch(err){ toast("Commande enregistrée, mais la facture n'a pas pu être jointe. " + errMsg(err)); }
+  } else toast(`Commande enregistrée : ${objet}, ${eur(prix)}`);
 });
 
 /* Sur petit écran, les étiquettes sont masquées : on recadre le schéma sur la moto */
@@ -1815,7 +1887,7 @@ async function applyBackup(b){
     st.config.put(cfg, "reglages");
   });
   await loadAll(); askPersist(); scheduleRender();
-  toast(`Sauvegarde importée : ${plural(b.achats.length,"réquisition")}, ${plural(files.length,"facture")}, ${plural(b.operations.length,"opération")}`);
+  toast(`Sauvegarde importée : ${plural(b.achats.length,"commande")}, ${plural(files.length,"facture")}, ${plural(b.operations.length,"opération")}`);
 }
 function hasData(){ return S.entries.length + S.ops.length + S.releves.length > 0; }
 function startImport(){ $("#imp-err").textContent = ""; $("#imp-file").click(); }
@@ -1826,7 +1898,7 @@ $("#imp-file").addEventListener("change", async ev => {
   catch(e){ show("reglages"); $("#imp-err").textContent = errMsg(e); return; }
   if(!hasData()){ const b = pending; pending = null; try{ await applyBackup(b); }catch(e){ toast(errMsg(e)); } return; }
   show("reglages");
-  $("#imp-msg").textContent = `Cette sauvegarde (${plural(pending.achats.length,"réquisition")}, ${plural(pending.fichiers.length,"facture")}, ${plural(pending.operations.length,"opération")}${pending.exporte ? `, du ${dFull(new Date(pending.exporte))}` : ""}) va remplacer toutes les données actuelles du téléphone.`;
+  $("#imp-msg").textContent = `Cette sauvegarde (${plural(pending.achats.length,"commande")}, ${plural(pending.fichiers.length,"facture")}, ${plural(pending.operations.length,"opération")}${pending.exporte ? `, du ${dFull(new Date(pending.exporte))}` : ""}) va remplacer toutes les données actuelles du téléphone.`;
   $("#imp-confirm").hidden = false;
   $("#imp-confirm").scrollIntoView({block:"center"});
 });
@@ -1859,7 +1931,7 @@ window.addEventListener("appinstalled", () => { $("#btn-install").hidden = true;
 function renderDataStatus(){
   const nf = S.entries.reduce((t,e) => t + e.factures.length, 0);
   const bytes = S.entries.reduce((t,e) => t + e.factures.reduce((u,f) => u + (+f.taille || 0), 0), 0);
-  $("#data-status").textContent = `Stocké sur cet appareil : ${plural(S.entries.length,"réquisition")}, ${plural(nf,"facture")}${nf ? ` (${sizeTxt(bytes)})` : ""}, ${plural(S.ops.length,"opération")} et ${plural(S.releves.length,"relevé")}.`
+  $("#data-status").textContent = `Stocké sur cet appareil : ${plural(S.entries.length,"commande")}, ${plural(nf,"facture")}${nf ? ` (${sizeTxt(bytes)})` : ""}, ${plural(S.ops.length,"opération")} et ${plural(S.releves.length,"relevé")}.`
     + (S.persisted === true ? " Stockage protégé contre le nettoyage automatique." : S.persisted === false ? " Le navigateur n'a pas accordé la protection du stockage : exporte régulièrement." : "");
   const d = S.lastExport ? daysSince(S.lastExport) : null;
   $("#backup-info").textContent = S.lastExport
@@ -1871,7 +1943,7 @@ function renderDataStatus(){
   if(late) $("#backup-msg").textContent = (d === null ? "Aucune sauvegarde exportée pour l'instant." : `Dernière sauvegarde il y a ${plural(d,"jour")}.`) + " Tes données ne sont que sur ce téléphone.";
 }
 
-/* Détail d'une réquisition et ses factures */
+/* Détail d'une commande et ses factures */
 const sheetDet = $("#sheet-det");
 sheetDet.addEventListener("click", e => { if(e.target === sheetDet) sheetDet.close(); });
 let detId = null;
@@ -1881,7 +1953,7 @@ const canShareFiles = (() => { try{ return !!(navigator.canShare && navigator.ca
 function renderDetail(){
   const e = S.entries.find(x => x.id === detId);
   if(!e){ if(sheetDet.open) sheetDet.close(); detId = null; return; }
-  $("#det-title").textContent = e.objet || "Réquisition";
+  $("#det-title").textContent = e.objet || "Commande";
   $("#det-info").innerHTML = `<dl class="det-dl">
     <div><dt>Date</dt><dd>${dFull(e.date)}</dd></div>
     <div><dt>Prix</dt><dd>${eur(e.prix)}</dd></div>
@@ -1944,7 +2016,7 @@ $("#det-files").addEventListener("click", ev => {
 $("#det-del").addEventListener("click", ev => {
   const e = S.entries.find(x => x.id === detId); if(!e) return;
   confirmClick(ev.currentTarget, async () => {
-    try{ await deleteAchat(e); sheetDet.close(); toast("Réquisition supprimée"); }
+    try{ await deleteAchat(e); sheetDet.close(); toast("Commande supprimée"); }
     catch(err){ $("#det-err").textContent = errMsg(err); }
   });
 });
