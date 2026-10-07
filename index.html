@@ -608,6 +608,101 @@ body.is-demo .db-only{display:none}
 .doc-title{font:inherit;font-size:.95rem;min-height:42px;padding:8px 10px;width:100%;background:var(--armor-in);color:var(--ink);border:1.5px solid var(--seam);border-radius:0;color-scheme:light}
 .doc-title:focus-visible{outline:3px solid var(--focus);outline-offset:0;border-color:var(--unit)}
 
+/* ===== Réglages dans l'en-tête ===== */
+.gear{appearance:none;flex:none;width:42px;height:42px;display:grid;place-items:center;margin-left:10px;background:var(--armor-hi);color:var(--ink);border:1.5px solid var(--seam);cursor:pointer}
+.gear svg{width:22px;height:22px}
+.gear:hover{border-color:var(--unit);color:var(--unit)}
+
+/* ===== Plan et historique d'entretien ===== */
+.pc-step{font-size:.8rem;font-weight:600;color:var(--unit-deep)}
+.rodage{border-left:5px solid var(--warn);margin-bottom:6px}
+.rod-bar{position:relative;height:12px;background:var(--seam);margin:12px 0 4px}
+.rod-bar i{display:block;height:100%;background:var(--warn)}
+.rod-bar span{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink-soft)}
+.rod-scale{display:flex;justify-content:space-between;font-size:.7rem;color:var(--ink-soft)}
+.rod-phase{font-weight:700;margin:10px 0 4px}
+.rod-txt{margin:0 0 10px;font-size:.92rem}
+.rod-src{margin-top:10px}
+.manual-head{margin:18px 0 10px}
+.manuel[hidden]{display:none}
+.manuel{background:var(--armor);color:var(--ink);padding:14px;margin-bottom:6px}
+.mt-scroll{overflow-x:auto}
+table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;line-height:1.3}
+.mt th,.mt td{border:1px solid var(--seam);padding:5px 6px;vertical-align:middle}
+.mt th{background:var(--armor-hi);font-weight:700;text-align:center}
+.mt td.mt-op{text-align:left;min-width:150px}
+.mt tr.first td{border-top:2px solid var(--ink-soft)}
+.mt .el{display:block;font-weight:700}
+.mt td.c{text-align:center;width:28px;color:var(--unit-deep);font-weight:700}
+.mt td.span{text-align:center;font-style:italic;color:var(--ink-soft)}
+.mt-notes{font-size:.8rem;color:var(--ink-soft);margin:12px 0 8px;padding-left:18px}
+.mt-notes li{margin-bottom:4px}
+.docs-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.docs-head .plate-t{margin-bottom:12px}
+.link-btn{appearance:none;background:none;border:0;padding:6px 0;color:var(--unit);font:inherit;font-weight:600;font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link-btn[hidden]{display:none}
+#docs-admin-wrap[hidden],#o-rev[hidden],#o-mo-wrap[hidden]{display:none}
+#docs-admin-wrap{margin:10px 0}
+.hist-sum{margin-bottom:14px}
+.rev-box{border:1.5px solid var(--seam);padding:10px 12px 12px;background:var(--armor-in)}
+.rev-tools{display:flex;gap:16px;margin:-2px 0 8px}
+.ckline{display:flex;gap:10px;align-items:center;font-weight:600;font-size:.9rem;color:var(--ink);cursor:pointer}
+.ckline input{width:20px;height:20px;margin:0;accent-color:var(--unit);flex:none}
+.pk-h{padding:6px 10px;font-size:.72rem;font-weight:700;color:var(--ink-soft);background:var(--armor);border-bottom:1px solid var(--seam)}
+.pk-l{display:block;font-size:.72rem;color:var(--signal-deep);font-weight:600}
+.op-actions{display:flex;gap:18px;margin-top:6px}
+.op-edit{appearance:none;background:none;border:0;color:var(--unit);font-weight:600;font-size:.82rem;cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:3px}
+.op-actions .op-del{margin-top:0}
+.det-used{font-size:.84rem;color:var(--unit-deep);font-weight:600;margin:10px 0 0}
+
+/* ===== Barre du bas : libellés longs ===== */
+.dock .lbl-d{display:none}
+.dock .lbl-m{font-size:.62rem;line-height:1.12;text-align:center}
+@media (min-width:900px){ .dock .lbl-m{display:none} .dock .lbl-d{display:inline} }
+
+/* ===== Tableau d'entretien suivi ===== */
+.plan-filter{margin:0 0 12px}
+.pg{margin:0 0 12px}
+.pg-h{margin:0 0 6px;font-size:.92rem;font-weight:700;color:var(--on-hangar)}
+.pg-star{color:var(--on-hangar-soft);font-weight:400}
+.prow{--cut:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:start;background:var(--armor);color:var(--ink);padding:10px 12px;margin-bottom:5px;border-left:5px solid var(--unit);clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.prow.st-over{border-left-color:var(--signal)}
+.prow.st-soon{border-left-color:var(--warn)}
+.prow.st-never,.prow.st-cond{border-left-color:var(--seam)}
+.pr-op{font-weight:600;line-height:1.3;font-size:.92rem}
+.pr-int{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
+.pr-last{font-size:.76rem;color:var(--ink-soft);margin-top:2px}
+.pr-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right}
+.pr-rem{font-size:.78rem;font-weight:700;max-width:120px;line-height:1.25}
+.prow.st-over .pr-rem{color:var(--signal-deep)}
+.prow .pc-st{font-size:.68rem}
+.prow.st-cond .pc-st{background:transparent;border:1px dashed var(--ink-soft);color:var(--ink-soft)}
+.prow .pc-do{padding:2px 0}
+.opbox{max-height:340px;overflow:auto;border:1.5px solid var(--seam);background:var(--armor-in);padding:4px 10px}
+.opgrp{padding:6px 0;border-bottom:1px solid var(--seam)}
+.opgrp:last-child{border-bottom:0}
+.opgrp-h{font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:4px}
+.ck2{display:flex;gap:10px;align-items:flex-start;padding:5px 0;font-weight:400;font-size:.86rem;line-height:1.3;cursor:pointer}
+.ck2 input{width:19px;height:19px;margin:0;flex:none;accent-color:var(--unit)}
+#o-count{display:block;margin:-2px 0 6px}
+.add-body{display:grid;gap:10px;padding-bottom:24px}
+.add-choice{appearance:none;display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;align-items:center;text-align:left;padding:16px;background:var(--armor-in);border:1.5px solid var(--seam);color:var(--ink);font:inherit;cursor:pointer}
+.add-choice:hover{border-color:var(--unit)}
+.add-choice svg{width:30px;height:30px;color:var(--unit)}
+.add-choice b{display:block;font-size:1.05rem}
+.add-choice small{display:block;color:var(--ink-soft);font-size:.84rem;margin-top:2px}
+.add-choice:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+.plan-tools{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px}
+.plan-tools .plan-filter{margin:0}
+.pr-undo{appearance:none;background:none;border:0;padding:0 0 0 6px;color:var(--signal-deep);font:inherit;font-size:.76rem;font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.pr-undo[data-armed="1"]{background:var(--signal-deep);color:#fff;text-decoration:none;padding:2px 6px}
+.fait-desc{margin:0 0 14px;font-weight:600;line-height:1.35}
+.opt-details{border:1.5px solid var(--seam);background:var(--armor-in);padding:10px 12px}
+.opt-details summary{cursor:pointer;font-weight:600;font-size:.9rem}
+.opt-details[open] summary{margin-bottom:8px}
+.opt-details .opbox{max-height:300px}
+
 /* ===== Message ===== */
 .toast{
   position:fixed;left:50%;transform:translate(-50%,12px);z-index:60;
@@ -639,36 +734,39 @@ body.is-demo .db-only{display:none}
     <span class="proto">Prototype</span>
     <span class="since" id="since"></span>
   </div>
+  <button type="button" class="gear" id="btn-reglages" aria-label="Réglages et sauvegarde">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+  </button>
 </header>
 
 <div class="shell">
   <nav class="dock" aria-label="Navigation principale">
     <button type="button" data-view="rapport" aria-current="page">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 L18.5 6.5"/></svg>
-      <span>Rapport</span>
+      <span class="lbl-m">Synthèse<br>commandes</span><span class="lbl-d">Synthèse des commandes</span>
     </button>
     <button type="button" data-view="journal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
-      <span>Journal</span>
+      <span class="lbl-m">Liste<br>commandes</span><span class="lbl-d">Liste des commandes</span>
     </button>
     <button type="button" class="new" id="btn-new">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      <span class="lbl-short">Ajouter</span><span class="lbl-long">Nouvelle commande</span>
+      <span class="lbl-short">Ajouter</span><span class="lbl-long">Ajouter</span>
     </button>
     <button type="button" data-view="entretien">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.9-5.9a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.3-.6-.6-2.3z"/></svg>
-      <span>Entretien</span>
+      <span class="lbl-m">Entretien<br>périodique</span><span class="lbl-d">Entretien périodique</span>
     </button>
-    <button type="button" data-view="reglages">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
-      <span>Réglages</span>
+    <button type="button" data-view="historique">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3 4v4h4"/><path d="M12 7.5V12l3 2"/></svg>
+      <span class="lbl-m">Historique<br>entretiens</span><span class="lbl-d">Historique des entretiens</span>
     </button>
   </nav>
 
   <main>
     <!-- ===== RAPPORT ===== -->
     <section class="view is-active" id="v-rapport" aria-labelledby="t-rapport">
-      <h2 class="sec-title stencil" id="t-rapport">Rapport de situation</h2>
+      <h2 class="sec-title stencil" id="t-rapport">Synthèse des commandes</h2>
       <p class="lede" id="rapport-date"></p>
       <div class="note-box" id="welcome-note" hidden>
         <p>Aucune donnée sur cet appareil pour l'instant. Importe ta sauvegarde, ou commence par ajouter une commande.</p>
@@ -721,7 +819,7 @@ body.is-demo .db-only{display:none}
         <article class="plate">
           <h3 class="plate-t">État de l'entretien</h3>
           <div id="maint-sum"></div>
-          <button type="button" class="btn-ghost plate-link" data-go="entretien">Ouvrir le registre</button>
+          <button type="button" class="btn-ghost plate-link" data-go="entretien">Voir l'entretien périodique</button>
         </article>
 
         <article class="plate">
@@ -760,7 +858,7 @@ body.is-demo .db-only{display:none}
 
     <!-- ===== JOURNAL ===== -->
     <section class="view" id="v-journal" aria-labelledby="t-journal">
-      <h2 class="sec-title stencil" id="t-journal">Journal des commandes</h2>
+      <h2 class="sec-title stencil" id="t-journal">Liste des commandes</h2>
       <div class="filters">
         <label class="search"><span class="sr">Rechercher</span><input id="q" type="search" placeholder="Chercher une pièce ou un fournisseur" autocomplete="off"></label>
         <div class="chips" id="chips" role="group" aria-label="Filtrer par système"></div>
@@ -770,14 +868,11 @@ body.is-demo .db-only{display:none}
       <div id="jlist"></div>
     </section>
 
-    <!-- ===== ENTRETIEN ===== -->
+    <!-- ===== ENTRETIEN (plan) ===== -->
     <section class="view" id="v-entretien" aria-labelledby="t-entretien">
-      <h2 class="sec-title stencil" id="t-entretien">Registre d'entretien</h2>
-      <p class="lede">Échéances calculées sur ton compteur, d'après le plan d'entretien du manuel Yamaha TDR125 de 1999.</p>
-      <div class="demo-note" id="demo-note">
-        <p>Les opérations affichées sont des exemples construits à partir de tes achats : dates et kilométrages sont fictifs.</p>
-        <button type="button" class="btn-ghost" id="clear-demo">Effacer les exemples</button>
-      </div>
+      <h2 class="sec-title stencil" id="t-entretien">Entretien périodique</h2>
+      <p class="lede">Échéances calculées sur ton compteur, d'après le manuel du propriétaire Yamaha TDR125 (réf. 5AE-28199-F5).</p>
+      <div class="demo-note" id="demo-note" hidden><p></p><button type="button" class="btn-ghost" id="clear-demo">Effacer les exemples</button></div>
 
       <article class="plate odo-plate">
         <div class="odo-main">
@@ -789,11 +884,16 @@ body.is-demo .db-only{display:none}
         <dl class="odo-stats" id="odo-stats"></dl>
       </article>
 
-      <div class="sub-head"><h3 class="stencil">Plan d'entretien</h3><span id="plan-sum"></span></div>
-      <div class="plan" id="plan"></div>
+      <div id="rodage"></div>
 
-      <div class="sub-head"><h3 class="stencil">Journal des opérations</h3><span id="ops-sum"></span></div>
-      <div id="ops"></div>
+      <div class="sub-head"><h3 class="stencil">Tableau des entretiens</h3><span id="plan-sum"></span></div>
+      <div class="plan-tools">
+        <div class="seg plan-filter" id="plan-filter" role="group" aria-label="Filtrer le tableau"></div>
+      </div>
+      <div id="plan"></div>
+
+      <div class="manual-head"><button type="button" class="btn-ghost" id="btn-manuel" aria-expanded="false" aria-controls="manuel">Voir le tableau original du manuel</button></div>
+      <div class="manuel" id="manuel" hidden></div>
 
       <article class="plate docs-plate">
         <h3 class="plate-t">Documentation technique</h3>
@@ -801,37 +901,18 @@ body.is-demo .db-only{display:none}
       </article>
     </section>
 
+    <!-- ===== HISTORIQUE DES ENTRETIENS ===== -->
+    <section class="view" id="v-historique" aria-labelledby="t-historique">
+      <h2 class="sec-title stencil" id="t-historique">Historique des entretiens</h2>
+      <p class="lede">Entretiens réalisés, avec les commandes utilisées et leur coût.</p>
+      <div id="ops"></div>
+    </section>
+
     <!-- ===== RÉGLAGES ===== -->
     <section class="view" id="v-reglages" aria-labelledby="t-reglages">
       <h2 class="sec-title stencil" id="t-reglages">Réglages</h2>
-      <p class="lede">Paramètres utilisés dans les calculs du rapport.</p>
+      <p class="lede">Sauvegarde des données et documentation technique.</p>
       <div class="stack">
-        <article class="plate">
-          <h3 class="plate-t">Le véhicule</h3>
-          <div class="fields">
-            <label class="f">Surnom<input id="p-nom" autocomplete="off"></label>
-            <div class="f-row">
-              <label class="f">Prix d'achat de la moto (€)<input id="p-prix" type="number" min="0" step="1" inputmode="numeric"></label>
-              <label class="f">Début du suivi<input id="p-debut" type="date"></label>
-            </div>
-          </div>
-        </article>
-        <article class="plate">
-          <h3 class="plate-t">Documentation technique</h3>
-          <p class="small">PDF consultables depuis l'onglet Entretien : RMT, manuel du propriétaire, catalogue de pièces… Tu peux renommer chaque document. Ils ne sont pas inclus dans la sauvegarde : garde les fichiers d'origine sur ton Drive ou ton PC.</p>
-          <div id="docs-admin"></div>
-          <div class="btn-row">
-            <button type="button" class="btn-ghost" id="doc-add">Ajouter des PDF</button>
-            <input type="file" id="doc-file" accept="application/pdf,.pdf" multiple hidden>
-          </div>
-          <span class="det-busy" id="doc-busy" aria-live="polite"></span>
-          <p class="err" id="doc-err" role="alert"></p>
-        </article>
-        <article class="plate">
-          <h3 class="plate-t">Insigne</h3>
-          <p class="small">Insigne affiché dans l'en-tête. Le logo complet apparaît aussi à l'ouverture.</p>
-          <div class="ins-pick" id="ins-pick" role="group" aria-label="Choisir l'insigne"></div>
-        </article>
         <article class="plate">
           <h3 class="plate-t">Données</h3>
           <p id="data-status"></p>
@@ -851,6 +932,17 @@ body.is-demo .db-only{display:none}
           <p class="small" id="backup-info"></p>
           <p class="err" id="imp-err" role="alert"></p>
           <button type="button" class="btn-primary" id="btn-install" hidden>Installer l'application</button>
+        </article>
+        <article class="plate">
+          <h3 class="plate-t">Documentation technique</h3>
+          <p class="small">Ajoute ici tes PDF : RMT, manuel du propriétaire, catalogue de pièces… Ils s'affichent dans l'onglet Entretien périodique. Tu peux renommer chaque document. Ils ne sont pas inclus dans la sauvegarde : garde les fichiers d'origine sur ton Drive ou ton PC.</p>
+          <div id="docs-admin"></div>
+          <div class="btn-row">
+            <button type="button" class="btn-ghost" id="doc-add">Ajouter des PDF</button>
+            <input type="file" id="doc-file" accept="application/pdf,.pdf" multiple hidden>
+          </div>
+          <span class="det-busy" id="doc-busy" aria-live="polite"></span>
+          <p class="err" id="doc-err" role="alert"></p>
         </article>
       </div>
     </section>
@@ -891,10 +983,10 @@ body.is-demo .db-only{display:none}
   </div>
 </dialog>
 
-<!-- ===== Feuille : nouvelle opération ===== -->
+<!-- ===== Feuille : nouvel entretien ===== -->
 <dialog class="sheet" id="sheet-op" aria-labelledby="op-title">
   <div class="sheet-head">
-    <h2 class="stencil" id="op-title">Nouvelle opération</h2>
+    <h2 class="stencil" id="op-title">Nouvel entretien</h2>
     <button type="button" class="x" data-close aria-label="Fermer">×</button>
   </div>
   <div class="sheet-body">
@@ -903,23 +995,61 @@ body.is-demo .db-only{display:none}
         <label class="f">Date<input id="o-date" type="date"></label>
         <label class="f">Kilométrage<input id="o-km" inputmode="numeric" autocomplete="off" placeholder="Ex. 20150"></label>
       </div>
-      <fieldset class="f"><legend>Opérations du plan</legend><div class="checks" id="o-items"></div></fieldset>
-      <label class="f">Autre opération<input id="o-autre" autocomplete="off" placeholder="Ex. remplacement des joints spi"></label>
-      <fieldset class="f">
-        <legend>Réalisé par</legend>
-        <div class="segopts">
-          <label class="segopt"><input type="radio" name="opar" value="moi" checked><span>Moi</span></label>
-          <label class="segopt"><input type="radio" name="opar" value="garage"><span>Garage</span></label>
-        </div>
-      </fieldset>
-      <fieldset class="f"><legend>Achats utilisés</legend><div class="picklist" id="o-achats"></div></fieldset>
+      <label class="f">Ce qui a été fait<input id="o-autre" autocomplete="off" placeholder="Ex. remplacement des joints spi de fourche"></label>
+      <fieldset class="f"><legend>Commandes utilisées</legend><div class="picklist" id="o-achats"></div></fieldset>
+      <label class="ckline"><input type="checkbox" id="o-rodage"><span>Réfection moteur : lancer le suivi de rodage</span></label>
+      <details class="opt-details" id="o-plan">
+        <summary>Mettre aussi à jour l'entretien périodique <span class="small">(facultatif)</span></summary>
+        <p class="small">Coche les lignes du tableau que cet entretien couvre : leurs échéances repartiront de cette date.</p>
+        <div class="rev-tools" id="o-quick"><button type="button" class="link-btn" data-q="6000">Cocher l'entretien des 6 000 km</button><button type="button" class="link-btn" data-q="none">Tout décocher</button></div>
+        <span class="small" id="o-count" aria-live="polite"></span>
+        <div class="opbox" id="o-items"></div>
+      </details>
       <label class="f">Notes<textarea id="o-note" rows="3" placeholder="Réglages, références, observations…"></textarea></label>
       <p class="err" id="o-err" role="alert"></p>
     </div>
   </div>
   <div class="sheet-foot">
-    <button type="button" class="btn-primary" id="o-save">Enregistrer l'opération</button>
-    <p class="small demo-only">Démonstration : l'ajout reste visible jusqu'à la fermeture de la page.</p>
+    <button type="button" class="btn-primary" id="o-save">Enregistrer l'entretien</button>
+  </div>
+</dialog>
+
+<!-- ===== Feuille : opération du tableau faite ===== -->
+<dialog class="sheet" id="sheet-fait" aria-labelledby="fait-title">
+  <div class="sheet-head">
+    <h2 class="stencil" id="fait-title">Fait</h2>
+    <button type="button" class="x" data-close aria-label="Fermer">×</button>
+  </div>
+  <div class="sheet-body">
+    <p class="fait-desc" id="fait-desc"></p>
+    <div class="fields">
+      <div class="f-row">
+        <label class="f">Date<input id="fait-date" type="date"></label>
+        <label class="f">Kilométrage<input id="fait-km" inputmode="numeric" autocomplete="off" placeholder="Ex. 20150"></label>
+      </div>
+      <p class="err" id="fait-err" role="alert"></p>
+    </div>
+  </div>
+  <div class="sheet-foot">
+    <button type="button" class="btn-primary" id="fait-save">Enregistrer</button>
+  </div>
+</dialog>
+
+<!-- ===== Feuille : choix du bouton + ===== -->
+<dialog class="sheet sheet-add" id="sheet-add" aria-labelledby="add-title">
+  <div class="sheet-head">
+    <h2 class="stencil" id="add-title">Ajouter</h2>
+    <button type="button" class="x" data-close aria-label="Fermer">×</button>
+  </div>
+  <div class="sheet-body add-body">
+    <button type="button" class="add-choice" data-add="commande">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
+      <span><b>Une commande</b><small>Pièce ou produit acheté, avec sa facture</small></span>
+    </button>
+    <button type="button" class="add-choice" data-add="entretien">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.9-5.9a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.3-.6-.6-2.3z"/></svg>
+      <span><b>Un entretien</b><small>Opérations faites sur la moto, liées à tes commandes</small></span>
+    </button>
   </div>
 </dialog>
 
@@ -1313,32 +1443,74 @@ function renderDepots(){
   $("#sites").innerHTML = rows.map(r => `<option value="${esc(r.site)}"></option>`).join("");
 }
 
-/* ---------- Entretien ---------- */
-/* Plan d'après le manuel du propriétaire Yamaha TDR125 (5AE-28199-E3, 1999) */
-const PLAN = [
-  {id:"chaine",    nom:"Chaîne : tension, nettoyage, graissage", km:1000,  mois:null, note:"Aussi après chaque lavage ou sortie sous la pluie"},
-  {id:"bougie",    nom:"Bougie",                                 km:6000,  mois:6,    note:"Contrôle, nettoyage, réglage ou remplacement"},
-  {id:"filtre",    nom:"Filtre à air",                           km:6000,  mois:6,    note:"Plus souvent par temps humide ou poussiéreux"},
-  {id:"carbu",     nom:"Carburateur : ralenti et starter",       km:6000,  mois:6},
-  {id:"autolube",  nom:"Pompe Autolube",                         km:6000,  mois:6,    note:"Contrôle, purge si besoin"},
-  {id:"freins",    nom:"Freins : plaquettes et niveaux",         km:6000,  mois:6},
-  {id:"suspension",nom:"Fourche et amortisseur : fuites",        km:6000,  mois:6},
-  {id:"pneus",     nom:"Pneus, roues et roulements",             km:6000,  mois:6},
-  {id:"boite",     nom:"Vidange huile de boîte",                 km:24000, mois:24,   note:"Et à 1 000 km après un rodage"},
-  {id:"refroid",   nom:"Liquide de refroidissement",             km:24000, mois:24},
-  {id:"graissage", nom:"Graissage bras oscillant et direction",  km:24000, mois:24},
-  {id:"jfrein",    nom:"Joints de frein et liquide",             km:null,  mois:24,   note:"Joints de maître-cylindre et d'étrier"}
+/* ---------- Entretien périodique ---------- */
+/* Tableau des entretiens et graissages périodiques, manuel du propriétaire Yamaha TDR125,
+   réf. 5AE-28199-F5 (2001), pages 6-2 à 6-4.
+   Chaque opération : [identifiant, texte du manuel, colonnes 1/6/12/18/24/annuel (ou =texte), km, mois, libellé court] */
+const MANUEL = [
+  [1,1,"Canalisation de carburant",[["m1","S'assurer que les durits d'alimentation ne sont ni craquelées ni endommagées","-xxxxx",6000,12,"contrôle"]]],
+  [2,0,"Bougie",[["m2","Remplacer","-xxxxx",6000,12,"remplacement"]]],
+  [3,0,"Élément du filtre à air",[["m3a","Nettoyer","-x-x--",12000,null,"nettoyage"],["m3b","Remplacer","--x-x-",12000,null,"remplacement"]]],
+  [4,0,"Embrayage",[["m4","Contrôler le fonctionnement, régler","xxxxx-",6000,null,"contrôle et réglage"]]],
+  [5,1,"Frein avant",[["m5a","Contrôler le fonctionnement, le niveau du liquide et l'absence de fuite","xxxxxx",6000,12,"contrôle"],["m5b","Remplacer les plaquettes","=Quand la limite est atteinte",null,null,"plaquettes"]]],
+  [6,1,"Frein arrière",[["m6a","Contrôler le fonctionnement, le niveau du liquide et l'absence de fuite","xxxxxx",6000,12,"contrôle"],["m6b","Remplacer les plaquettes","=Quand la limite est atteinte",null,null,"plaquettes"]]],
+  [7,1,"Durits de frein",[["m7a","Contrôler l'état (craquelures, dommages)","-xxxxx",6000,12,"contrôle"],["m7b","Remplacer","=Tous les 4 ans",null,48,"remplacement"]]],
+  [8,1,"Roues",[["m8","Contrôler le voile et l'état","-xxxx-",6000,null,"contrôle"]]],
+  [9,1,"Pneus",[["m9","Contrôler la sculpture, l'état et la pression ; remplacer ou corriger si nécessaire","-xxxxx",6000,12,"contrôle"]]],
+  [10,1,"Roulements de roue",[["m10","S'assurer qu'ils n'ont pas de jeu et ne sont pas endommagés","-xxxx-",6000,null,"contrôle"]]],
+  [11,1,"Bras oscillant",[["m11a","Contrôler le fonctionnement et le jeu des points pivots","-xxxx-",6000,null,"contrôle"],["m11b","Graisser (savon au lithium)","=Tous les 24 000 km",24000,null,"graissage"]]],
+  [12,0,"Chaîne de transmission",[["m12","Contrôler la tension et l'alignement de la roue, nettoyer et lubrifier","=Tous les 1 000 km et après un lavage ou une sortie sous la pluie",1000,null,"entretien"]]],
+  [13,1,"Roulements de direction",[["m13a","Contrôler le jeu et la dureté de la direction","xxxxx-",6000,null,"contrôle"],["m13b","Graisser (savon au lithium)","=Tous les 24 000 km",24000,null,"graissage"]]],
+  [14,1,"Attaches du cadre",[["m14","S'assurer que tous les écrous et vis sont correctement serrés","-xxxxx",6000,12,"serrage"]]],
+  [15,0,"Béquille latérale",[["m15","Contrôler le fonctionnement, lubrifier","-xxxxx",6000,12,"contrôle et graissage"]]],
+  [16,1,"Contacteur de béquille latérale",[["m16","Contrôler le fonctionnement","xxxxxx",6000,12,"contrôle"]]],
+  [17,1,"Fourche avant",[["m17","Contrôler le fonctionnement et l'absence de fuite","-xxxx-",6000,null,"contrôle"]]],
+  [18,1,"Combiné ressort-amortisseur",[["m18","Contrôler le fonctionnement et l'absence de fuite","-xxxx-",6000,null,"contrôle"]]],
+  [19,1,"Carburateur",[["m19","Contrôler le starter, régler le ralenti","xxxxxx",6000,12,"starter et ralenti"]]],
+  [20,1,"Pompe à huile Autolube",[["m20","Contrôler le fonctionnement, purger si nécessaire","x-x-xx",12000,12,"contrôle et purge"]]],
+  [21,0,"Huile de boîte de vitesses",[["m21a","Contrôler le niveau","xxxxxx",6000,12,"niveau"],["m21b","Changer","x---x-",24000,null,"vidange"]]],
+  [22,1,"Circuit de refroidissement",[["m22a","Contrôler le niveau et l'absence de fuite","-xxxxx",6000,12,"contrôle"],["m22b","Changer le liquide","=Tous les 3 ans",null,36,"vidange"]]],
+  [23,1,"Contacteurs de feu stop avant et arrière",[["m23","Contrôler le fonctionnement","xxxxxx",6000,12,"contrôle"]]],
+  [24,0,"Pièces mobiles et câbles",[["m24","Lubrifier","-xxxxx",6000,12,"graissage"]]],
+  [25,1,"Éclairage, signalisation et contacteurs",[["m25","Contrôler le fonctionnement, régler le faisceau de phare","xxxxxx",6000,12,"contrôle"]]],
+  ["N.B.",0,"Freins hydrauliques",[["m26","Changer le liquide de frein et les composants internes des étriers et maîtres-cylindres","=Tous les 2 ans",null,24,"liquide et joints"]]]
 ];
+const PLAN = MANUEL.flatMap(([num, star, el, ops]) => ops.map(([id, op, pat, km, mois, court]) =>
+  ({id, num, star, el, op, pat, km, mois, nom:`${el} : ${court}`})));
+const PLAN_BY_ID = Object.fromEntries(PLAN.map(p => [p.id, p]));
+/* Reprise des entretiens saisis avec les versions précédentes de l'application */
+const LEGACY = {chaine:["m12"], bougie:["m2"], filtre:["m3a"], carbu:["m19"], autolube:["m20"], boite:["m21b"],
+  graissage:["m11b","m13b"], refroid:["m22b"], lfrein:["m26"], jfrein:["m26"], durits:["m7b"],
+  freins:["m5a","m6a"], suspension:["m17","m18"], pneus:["m9"]};
+const CTL_MAP = {carburant:"m1", embrayage:"m4", "frein-av":"m5a", "frein-ar":"m6a", durits:"m7a", roues:"m8", pneus:"m9",
+  "roul-roue":"m10", bras:"m11a", direction:"m13a", cadre:"m14", bequille:"m15", "ct-bequille":"m16", fourche:"m17",
+  amortisseur:"m18", "niveau-boite":"m21a", refroid:"m22a", "feu-stop":"m23", cables:"m24", eclairage:"m25"};
+function normItems(items, controles){
+  const out = new Set();
+  (items || []).map(String).forEach(i => {
+    if(PLAN_BY_ID[i]) out.add(i);
+    else if(i === "revision"){
+      const ctl = (controles || []).map(c => CTL_MAP[c]).filter(Boolean);
+      (ctl.length ? ctl : Object.values(CTL_MAP)).forEach(x => out.add(x));
+    }
+    else (LEGACY[i] || []).forEach(x => out.add(x));
+  });
+  return [...out];
+}
 
 const nf = new Intl.NumberFormat("fr-FR");
 const kmFmt = n => nf.format(Math.round(n)) + " km";
 const addMonths = (d,m) => { const r = new Date(d); r.setMonth(r.getMonth()+m); return r; };
-const durTxt = d => d < 45 ? plural(d,"jour") : `${Math.round(d/30.44)} mois`;
-const intTxt = p => p.km && p.mois ? `Tous les ${kmFmt(p.km)} ou ${p.mois} mois` : p.km ? `Tous les ${kmFmt(p.km)}` : `Tous les ${p.mois} mois`;
-const ST = {over:{l:"Dépassé",o:0}, soon:{l:"À prévoir",o:1}, never:{l:"À renseigner",o:2}, ok:{l:"À jour",o:3}};
+const durTxt = d => d < 45 ? plural(d,"jour") : d < 730 ? `${Math.round(d/30.44)} mois` : `${(d/365.25).toFixed(1).replace(".0","").replace(".",",")} ans`;
+const moisTxt = m => m % 12 === 0 ? (m === 12 ? "1 an" : `${m/12} ans`) : `${m} mois`;
+const intTxt = p => p.pat.startsWith("=") ? p.pat.slice(1)
+  : p.km && p.mois ? `Tous les ${kmFmt(p.km)} ou 1 fois par an` : `Tous les ${kmFmt(p.km)}`;
+const ST = {over:{l:"Dépassé",o:0}, soon:{l:"À prévoir",o:1}, never:{l:"À renseigner",o:2}, ok:{l:"À jour",o:3}, cond:{l:"Selon usure",o:4}};
+const planNom = id => (PLAN_BY_ID[id] || {}).nom;
+const opTitle = o => o.autre || (o.items.length === 1 ? planNom(o.items[0]) : o.items.length ? `${o.items.length} opérations du plan` : (o.rodage ? "Réfection moteur" : "Entretien"));
 
-function readings(){
-  return [...S.releves, ...S.ops].map(x => ({date:x.date, km:x.km})).sort((a,b) => a.date - b.date || a.km - b.km);
+function readings(exclOp){
+  return [...S.releves, ...S.ops.filter(o => o.id !== exclOp)].map(x => ({date:x.date, km:x.km})).sort((a,b) => a.date - b.date || a.km - b.km);
 }
 function odoNow(){
   const r = readings();
@@ -1349,22 +1521,24 @@ function lastDone(pid){
 }
 function planState(p){
   const last = lastDone(p.id), o = odoNow(), now = new Date();
+  if(!p.km && !p.mois) return {p, last, st:"cond", frac:-2, rem:""};
   if(!last) return {p, last, st:"never", frac:-1, rem:"Jamais renseigné"};
-  const fk = p.km ? Math.max(0, o.km - last.km)/p.km : 0;
+  const fk = p.km && o ? Math.max(0, o.km - last.km)/p.km : 0;
   const due = p.mois ? addMonths(last.date, p.mois) : null;
   const ft = due ? Math.max(0, now - last.date)/(due - last.date) : 0;
   const frac = Math.max(fk, ft);
   const st = frac >= 1 ? "over" : frac >= .8 ? "soon" : "ok";
+  const rKm = p.km && o ? last.km + p.km - o.km : null;
+  const rJ = due ? Math.round((due - now)/864e5) : null;
   let rem;
-  if(p.km && fk >= ft){ const r = last.km + p.km - o.km; rem = r >= 0 ? `Reste ${kmFmt(r)}` : `Dépassé de ${kmFmt(-r)}`; }
-  else { const dd = Math.round((due - now)/864e5); rem = dd >= 0 ? `Reste ${durTxt(dd)}` : `Dépassé de ${durTxt(-dd)}`; }
-  const ech = [p.km ? kmFmt(last.km + p.km) : null, due ? dFull(due) : null].filter(Boolean).join(" ou ");
-  return {p, last, st, frac, rem, ech};
+  if(st === "over") rem = p.km && fk >= ft ? `Dépassé de ${kmFmt(-rKm)}` : `Dépassé de ${durTxt(-rJ)}`;
+  else rem = "Reste " + [rKm !== null ? kmFmt(rKm) : null, rJ !== null ? durTxt(rJ) : null].filter(Boolean).join(" ou ");
+  return {p, last, st, frac, rem};
 }
 function planStates(){
-  return PLAN.map(planState).sort((a,b) => ST[a.st].o - ST[b.st].o || b.frac - a.frac);
+  return PLAN.map(planState).filter(s => s.st !== "cond").sort((a,b) => ST[a.st].o - ST[b.st].o || b.frac - a.frac);
 }
-function countStates(sts){ const c = {over:0,soon:0,never:0,ok:0}; sts.forEach(s => c[s.st]++); return c; }
+function countStates(sts){ const c = {over:0,soon:0,never:0,ok:0,cond:0}; sts.forEach(s => c[s.st]++); return c; }
 
 function renderOdo(){
   const o = odoNow();
@@ -1390,43 +1564,121 @@ function renderOdo(){
      <div><dt>Dépenses par km parcouru</dt><dd>${run > 0 ? "≈ " + eur(spent/run) : "Pas encore calculable"}</dd></div>`;
 }
 
-function renderPlan(){
-  const sts = planStates(), c = countStates(sts);
-  $("#plan-sum").textContent = [c.over && `${c.over} dépassé${c.over>1?"s":""}`, c.soon && `${c.soon} à prévoir`, `${c.ok} à jour`, c.never && `${c.never} à renseigner`].filter(Boolean).join(", ");
-  $("#plan").innerHTML = sts.map(s => {
-    const n = s.st === "never" ? 0 : Math.min(10, Math.round(s.frac*10));
-    return `<article class="pcard st-${s.st}">
-      <div class="pc-top"><span class="pc-name">${esc(s.p.nom)}</span><span class="pc-st">${ST[s.st].l}</span></div>
-      <div class="pc-int">${intTxt(s.p)}</div>
-      ${s.p.note ? `<div class="pc-note">${esc(s.p.note)}</div>` : ""}
-      <div class="gauge" aria-hidden="true">${Array.from({length:10}, (_,i) => `<i${i < n ? ' class="on"' : ""}></i>`).join("")}</div>
-      <div class="pc-rem">${s.rem}</div>
-      <div class="pc-last">${s.last ? `Fait le ${dFull(s.last.date)} à ${kmFmt(s.last.km)}. Échéance : ${s.ech}.` : "Aucune opération enregistrée."}</div>
-      <button type="button" class="pc-do" data-plan="${s.p.id}">Marquer comme fait</button>
-    </article>`;
-  }).join("");
+/* Suivi de rodage : visible après une réfection moteur, jusqu'à la vidange de boîte qui le clôt */
+function rodageState(){
+  const r = S.ops.filter(o => o.rodage).sort((a,b) => b.date - a.date || b.km - a.km)[0];
+  if(!r) return null;
+  const fin = S.ops.find(x => x.id !== r.id && x.items.includes("m21b") && x.km > r.km);
+  if(fin) return null;
+  const o = odoNow();
+  return {r, since:Math.max(0, (o ? o.km : r.km) - r.km)};
+}
+function renderRodage(){
+  const s = rodageState(), box = $("#rodage");
+  if(!s){ box.innerHTML = ""; return; }
+  const pct = Math.min(100, s.since / 10);
+  let phase, conseil, action = "";
+  if(s.since < 500){
+    phase = "Phase 1 : 0 à 500 km";
+    conseil = "Éviter de dépasser 6 000 tr/min de façon prolongée. Laisser refroidir le moteur 5 à 10 minutes après chaque heure d'utilisation. Varier l'allure, ne pas rouler à ouverture des gaz constante.";
+  } else if(s.since < 1000){
+    phase = "Phase 2 : 500 à 1 000 km";
+    conseil = "Éviter de dépasser 7 000 tr/min de façon prolongée. Changer de rapport librement, mais ne jamais accélérer à fond.";
+  } else {
+    phase = "Rodage terminé";
+    conseil = "Le manuel demande de remplacer l'huile de boîte après les 1 000 premiers km.";
+    action = `<button type="button" class="btn-ghost" data-plan="m21b">Enregistrer la vidange de boîte</button>`;
+  }
+  box.innerHTML = `<article class="plate rodage">
+    <h3 class="plate-t">Rodage en cours</h3>
+    <p class="small">Depuis la réfection du ${dFull(s.r.date)} à ${kmFmt(s.r.km)} : ${kmFmt(s.since)} parcourus.</p>
+    <div class="rod-bar" aria-hidden="true"><i style="width:${pct}%"></i><span style="left:50%"></span></div>
+    <div class="rod-scale" aria-hidden="true"><span>0</span><span>500 km</span><span>1 000 km</span></div>
+    <p class="rod-phase">${phase}</p>
+    <p class="rod-txt">${conseil}</p>
+    ${action}
+    <p class="small rod-src">Source : manuel du propriétaire, chapitre 5, rodage du moteur. Il décrit le rodage d'un moteur neuf, appliqué ici après réfection.</p>
+  </article>`;
 }
 
-function renderOps(){
-  const ops = [...S.ops].sort((a,b) => b.date - a.date || b.km - a.km);
-  $("#ops-sum").textContent = plural(ops.length,"opération");
-  if(!ops.length){ $("#ops").innerHTML = `<div class="empty"><p>Aucune opération enregistrée pour l'instant.</p></div>`; return; }
+/* Le tableau complet du manuel, une ligne suivie par opération */
+let planFilter = "all";
+try{ planFilter = localStorage.getItem("tdr125-plan-filtre") === "todo" ? "todo" : "all"; }catch(_){}
+function renderPlan(){
+  const states = Object.fromEntries(PLAN.map(p => [p.id, planState(p)]));
+  const c = countStates(Object.values(states));
+  const todo = c.over + c.soon + c.never;
+  $("#plan-sum").textContent = [c.over && `${c.over} dépassé${c.over>1?"s":""}`, c.soon && `${c.soon} à prévoir`, `${c.ok} à jour`, c.never && `${c.never} à renseigner`].filter(Boolean).join(", ");
+  $("#plan-filter").innerHTML =
+    `<button type="button" class="segb" data-pf="all" aria-pressed="${planFilter === "all"}">Tout le tableau</button>` +
+    `<button type="button" class="segb" data-pf="todo" aria-pressed="${planFilter === "todo"}">À faire (${todo})</button>`;
+  const html = MANUEL.map(([num, star, el, ops]) => {
+    const rows = ops.map(op => states[op[0]]).filter(s => planFilter === "all" || s.st === "over" || s.st === "soon" || s.st === "never");
+    if(!rows.length) return "";
+    return `<section class="pg"><h4 class="pg-h">${num}${num === "N.B." ? "" : "."} ${esc(el)}${star ? '<span class="pg-star" title="Yamaha recommande de confier ce point à un concessionnaire"> *</span>' : ""}</h4>
+      ${rows.map(s => `<div class="prow st-${s.st}">
+        <div class="pr-main">
+          <div class="pr-op">${esc(s.p.op)}</div>
+          <div class="pr-int">${esc(intTxt(s.p))}</div>
+          <div class="pr-last">${s.last ? `Fait le ${dFull(s.last.date)} à ${kmFmt(s.last.km)}${s.last.type === "pointage" ? ` <button type="button" class="pr-undo" data-unfait="${esc(s.last.id)}" data-item="${s.p.id}">Annuler</button>` : " (voir l'historique)"}` : "Jamais enregistré"}</div>
+        </div>
+        <div class="pr-side">
+          <span class="pc-st">${ST[s.st].l}</span>
+          ${s.rem && s.st !== "never" ? `<span class="pr-rem">${s.rem}</span>` : ""}
+          <button type="button" class="pc-do" data-plan="${s.p.id}">Fait</button>
+        </div>
+      </div>`).join("")}
+    </section>`;
+  }).join("");
+  $("#plan").innerHTML = html || `<div class="empty"><p>Rien à faire pour l'instant : tout est à jour.</p></div>`;
+}
+
+function renderManuel(){
+  const cols = ["1","6","12","18","24"];
+  const rows = MANUEL.filter(r => r[0] !== "N.B.").map(([num, star, el, acts]) => acts.map(([id, txt, pat], i) => {
+    const head = i === 0 ? `<span class="el">${num}. ${esc(el)}${star ? " *" : ""}</span>` : "";
+    const cells = pat.startsWith("=")
+      ? `<td class="span" colspan="6">${esc(pat.slice(1))}</td>`
+      : [...pat].map(ch => `<td class="c">${ch === "x" ? "✓" : ""}</td>`).join("");
+    return `<tr${i === 0 ? ' class="first"' : ""}><td class="mt-op">${head}${esc(txt)}</td>${cells}</tr>`;
+  }).join("")).join("");
+  $("#manuel").innerHTML = `<div class="mt-scroll"><table class="mt">
+    <thead><tr><th rowspan="2">Élément et opération</th><th colspan="5">Compteur (× 1 000 km)</th><th rowspan="2">An­nuel</th></tr>
+    <tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <ul class="mt-notes">
+      <li>Le contrôle annuel n'est pas nécessaire si un entretien périodique a été fait dans l'année.</li>
+      <li>À partir de 30 000 km, reprendre les fréquences à partir de 6 000 km.</li>
+      <li>* Yamaha recommande de confier ces points à un concessionnaire (données techniques et outillage nécessaires).</li>
+      <li>Nettoyer le filtre à air plus souvent en zone poussiéreuse ou humide.</li>
+      <li>Freins hydrauliques : changer le liquide et les composants internes des étriers et maîtres-cylindres tous les 2 ans ; les durits tous les 4 ans ou dès qu'elles sont abîmées.</li>
+    </ul>
+    <p class="small">Source : manuel du propriétaire Yamaha TDR125, réf. 5AE-28199-F5, pages 6-2 à 6-4.</p>`;
+}
+
+function renderHist(){
+  const ops = S.ops.filter(o => o.type !== "pointage").sort((a,b) => b.date - a.date || b.km - a.km);
   const byId = Object.fromEntries(S.entries.map(e => [e.id, e]));
+  const parts = o => o.achats.map(id => byId[id]).filter(Boolean);
+  if(!ops.length){
+    $("#ops").innerHTML = `<div class="empty"><p>Aucun entretien enregistré pour l'instant. Ajoute-en un avec le bouton Ajouter, puis « Un entretien ».</p></div>`;
+    return;
+  }
   $("#ops").innerHTML = ops.map(o => {
-    const parts = o.achats.map(id => byId[id]).filter(Boolean);
-    const names = o.items.map(id => (PLAN.find(p => p.id === id) || {}).nom).filter(Boolean);
-    const title = o.autre || names.join(", ");
-    return `<article class="op${o.par === "garage" ? " garage" : ""}">
+    const ps = parts(o), p = sum(ps);
+    const names = o.items.map(planNom).filter(Boolean);
+    const tags = o.autre || names.length > 1 ? names : [];
+    return `<article class="op">
       <div class="e-date"><span class="e-day stencil">${dDay(o.date)}</span><span class="e-mon">${dMon(o.date)}<br>${o.date.getFullYear()}</span></div>
       <div>
-        <div class="op-title">${esc(title)}${o.demo ? '<span class="tag-demo">Exemple</span>' : ""}${o.isNew ? '<span class="tag-new">Ajout</span>' : ""}</div>
-        <div class="op-meta">${kmFmt(o.km)}, ${o.par === "garage" ? "au garage" : "par moi"}</div>
-        ${o.autre && names.length ? `<div class="op-tags">${names.map(n => `<span>${esc(n)}</span>`).join("")}</div>` : ""}
+        <div class="op-title">${esc(opTitle(o))}${o.rodage ? '<span class="tag-new">Rodage</span>' : ""}</div>
+        <div class="op-meta">${kmFmt(o.km)}</div>
+        ${tags.length ? `<div class="op-tags">${tags.map(n => `<span>${esc(n)}</span>`).join("")}</div>` : ""}
         ${o.note ? `<div class="op-note">${esc(o.note)}</div>` : ""}
-        <button type="button" class="op-del" data-op="${esc(o.id)}">Supprimer</button>
-        ${parts.length ? `<div class="op-parts">${plural(parts.length,"achat")} lié${parts.length>1?"s":""} : ${parts.map(x => esc(x.objet)).join(", ")}</div>` : ""}
+        ${ps.length ? `<div class="op-parts">${plural(ps.length,"commande")} liée${ps.length>1?"s":""} : ${ps.map(x => `${esc(x.objet)} (${eur(x.prix)})`).join(", ")}</div>` : ""}
+        <div class="op-actions"><button type="button" class="op-edit" data-edit="${esc(o.id)}">Modifier</button><button type="button" class="op-del" data-op="${esc(o.id)}">Supprimer</button></div>
       </div>
-      <div class="op-cost">${parts.length ? eur(sum(parts)) + "<small>pièces</small>" : ""}</div>
+      <div class="op-cost">${ps.length ? eur(p) + "<small>pièces</small>" : ""}</div>
     </article>`;
   }).join("");
 }
@@ -1444,16 +1696,13 @@ function renderMaintSummary(){
 }
 
 function renderEntretien(){
-  renderOdo(); renderPlan(); renderOps();
-  $("#demo-note").hidden = !(S.ops.some(o => o.demo) || S.releves.some(r => r.demo));
+  renderOdo(); renderRodage(); renderPlan(); renderHist();
+  $("#demo-note").hidden = true;
 }
 
 /* ---------- Divers ---------- */
 function renderInsignia(){
   $("#insignia").innerHTML = INSIGNIA[S.insigne].svg;
-  $("#ins-pick").innerHTML = Object.entries(INSIGNIA).map(([k,v]) =>
-    `<button type="button" class="ins-opt" data-ins="${k}" aria-pressed="${k===S.insigne}">${v.svg}<span>${v.nom}</span></button>`
-  ).join("");
 }
 function renderHeader(){
   $("#bike-name").textContent = S.nom ? `Dit : ${S.nom}` : "";
@@ -1478,7 +1727,7 @@ function toast(msg){
 
 function show(view){
   S.view = view;
-  const lbl = view === "entretien" ? "Nouvelle opération" : "Nouvelle commande";
+  const lbl = "Ajouter une commande ou un entretien";
   $("#btn-new .lbl-long").textContent = lbl;
   $("#btn-new").setAttribute("aria-label", lbl);
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("is-active", v.id === "v-"+view));
@@ -1522,32 +1771,18 @@ $("#jlist").addEventListener("click", e => {
 });
 
 /* Réglages */
-$("#ins-pick").addEventListener("click", e => {
-  const b = e.target.closest(".ins-opt"); if(!b) return;
-  S.insigne = b.dataset.ins; renderInsignia(); saveConfig();
-});
-$("#p-nom").value = S.nom;
-$("#p-prix").value = S.prixMoto;
-$("#p-debut").value = isoD(S.debut);
-$("#p-nom").addEventListener("input", e => { S.nom = e.target.value.trim(); renderHeader(); saveConfig(); });
-$("#p-prix").addEventListener("input", e => { const v = parseFloat(e.target.value); S.prixMoto = isFinite(v) && v >= 0 ? v : 0; renderKPI(); saveConfig(); });
-$("#p-debut").addEventListener("change", e => {
-  if(!e.target.value) return;
-  S.debut = parseD(e.target.value); renderHeader(); renderKPI(); renderMonths(); saveConfig();
-});
-
 /* Feuille d'ajout */
 const sheet = $("#sheet");
 $("#f-cat").innerHTML = [...CATS].map(c => c.id).sort((a,b) => a.localeCompare(b,"fr"))
   .map(id => `<option value="${esc(id)}">${esc(id)}</option>`).join("");
-$("#btn-new").addEventListener("click", () => {
-  if(S.view === "entretien"){ openOp(); return; }
+$("#btn-new").addEventListener("click", () => openDlg($("#sheet-add")));
+function openCommande(){
   $("#f-date").value = isoD(new Date());
   $("#f-cat").value = S.sel || "Moteur";
   $("#f-err").textContent = "";
   if(typeof sheet.showModal === "function") sheet.showModal(); else sheet.setAttribute("open","");
   setTimeout(() => $("#f-objet").focus(), 30);
-});
+}
 $("#sheet-close").addEventListener("click", () => sheet.close());
 sheet.addEventListener("click", e => { if(e.target === sheet) sheet.close(); });
 
@@ -1590,50 +1825,154 @@ const sheetOp = $("#sheet-op"), sheetKm = $("#sheet-km");
 const openDlg = d => { if(typeof d.showModal === "function") d.showModal(); else d.setAttribute("open",""); };
 document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
 [sheetOp, sheetKm].forEach(d => d.addEventListener("click", e => { if(e.target === d) d.close(); }));
-$("#o-items").innerHTML = PLAN.map(p => `<label class="ck"><input type="checkbox" value="${p.id}"><span>${esc(p.nom)}</span></label>`).join("");
+$("#o-items").innerHTML = MANUEL.map(([num, star, el, ops]) => `<div class="opgrp"><div class="opgrp-h">${num}${num === "N.B." ? "" : "."} ${esc(el)}</div>${
+  ops.map(([id, txt]) => `<label class="ck2"><input type="checkbox" value="${id}"><span>${esc(txt)}</span></label>`).join("")}</div>`).join("");
+/* « Entretien des 6 000 km » : toutes les opérations cochées dans la colonne 6 du tableau */
+const OPS_6000 = PLAN.filter(p => !p.pat.startsWith("=") && p.pat[1] === "x").map(p => p.id);
+renderManuel();
 
 const parseKm = v => { const n = parseInt(String(v).replace(/[\s\u202f\u00a0.]/g,""), 10); return isFinite(n) ? n : NaN; };
-function kmConflict(date, km){
-  const r = readings();
+const parseMoney = v => { const n = parseFloat(String(v).replace(/[\s\u202f\u00a0€]/g,"").replace(",", ".")); return isFinite(n) && n >= 0 ? Math.round(n*100)/100 : NaN; };
+function kmConflict(date, km, exclOp){
+  const r = readings(exclOp);
   const before = r.filter(x => x.date <= date && x.km > km).sort((a,b) => b.km - a.km)[0];
   if(before) return `Le compteur affichait déjà ${kmFmt(before.km)} le ${dFull(before.date)}.`;
   const after = r.filter(x => x.date > date && x.km < km).sort((a,b) => a.km - b.km)[0];
   if(after) return `Le compteur n'affichait que ${kmFmt(after.km)} le ${dFull(after.date)}.`;
   return null;
 }
-function openOp(pre){
+const countSel = () => { const n = document.querySelectorAll("#o-items input:checked").length; $("#o-count").textContent = n ? `${plural(n,"opération")} cochée${n>1?"s":""}` : ""; };
+$("#o-items").addEventListener("change", countSel);
+$("#o-quick").addEventListener("click", e => {
+  const b = e.target.closest("[data-q]"); if(!b) return;
+  if(b.dataset.q === "6000") document.querySelectorAll("#o-items input").forEach(i => { if(OPS_6000.includes(i.value)) i.checked = true; });
+  else document.querySelectorAll("#o-items input").forEach(i => i.checked = false);
+  countSel();
+});
+
+/* Liste des commandes : celles des deux mois précédant l'entretien d'abord, les commandes déjà liées sont signalées */
+let editOpId = null;
+function renderPicker(selected){
+  const ds = $("#o-date").value, d = ds ? parseD(ds) : new Date();
+  const linked = {};
+  S.ops.forEach(o => { if(o.id !== editOpId) o.achats.forEach(a => { if(!linked[a]) linked[a] = o; }); });
+  const win = 62 * 864e5;
+  const recent = S.entries.filter(e => e.date <= d && d - e.date <= win).sort(byDateDesc);
+  const others = S.entries.filter(e => !recent.includes(e)).sort(byDateDesc);
+  const row = e => `<label class="pk"><input type="checkbox" value="${esc(e.id)}"${selected.has(e.id) ? " checked" : ""}><span class="pk-d">${dDay(e.date)} ${dMon(e.date)}</span><span>${esc(e.objet)}${linked[e.id] ? `<small class="pk-l">Déjà liée : ${esc(opTitle(linked[e.id]))} (${dFull(linked[e.id].date)})</small>` : ""}</span><span class="pk-p">${eur(e.prix)}</span></label>`;
+  $("#o-achats").innerHTML = S.entries.length
+    ? (recent.length ? `<div class="pk-h">Commandes des 2 mois précédant l'entretien</div>${recent.map(row).join("")}` : "")
+      + (others.length ? `<div class="pk-h">${recent.length ? "Autres commandes" : "Toutes les commandes"}</div>${others.map(row).join("")}` : "")
+    : `<p class="small" style="margin:10px">Aucune commande enregistrée.</p>`;
+}
+$("#o-date").addEventListener("change", () => {
+  renderPicker(new Set([...document.querySelectorAll("#o-achats input:checked")].map(i => i.value)));
+});
+
+function openOp(pre, op){
+  editOpId = op ? op.id : null;
+  $("#op-title").textContent = op ? "Modifier l'entretien" : "Nouvel entretien";
+  $("#o-save").textContent = op ? "Enregistrer les modifications" : "Enregistrer l'entretien";
   const o = odoNow();
-  $("#o-date").value = isoD(new Date());
-  $("#o-km").value = o ? Math.round(o.km) : "";
-  document.querySelectorAll("#o-items input").forEach(i => i.checked = !!pre && i.value === pre);
-  $("#o-autre").value = ""; $("#o-note").value = "";
-  document.querySelector('input[name="opar"][value="moi"]').checked = true;
-  $("#o-achats").innerHTML = [...S.entries].sort(byDateDesc).map(e =>
-    `<label class="pk"><input type="checkbox" value="${e.id}"><span class="pk-d">${dDay(e.date)} ${dMon(e.date)}</span><span>${esc(e.objet)}</span><span class="pk-p">${eur(e.prix)}</span></label>`
-  ).join("");
+  $("#o-date").value = op ? op.d : isoD(new Date());
+  $("#o-km").value = op ? op.km : (o ? Math.round(o.km) : "");
+  const items = new Set(op ? op.items : (pre ? [pre] : []));
+  document.querySelectorAll("#o-items input").forEach(i => i.checked = items.has(i.value));
+  $("#o-autre").value = op ? op.autre : "";
+  $("#o-rodage").checked = op ? !!op.rodage : false;
+  $("#o-note").value = op ? op.note : "";
+  countSel();
+  $("#o-plan").open = items.size > 0;
+  renderPicker(new Set(op ? op.achats : []));
   $("#o-err").textContent = "";
   openDlg(sheetOp);
 }
-$("#plan").addEventListener("click", e => { const b = e.target.closest("[data-plan]"); if(b) openOp(b.dataset.plan); });
+/* « Fait » sur une ligne du tableau : date et kilométrage seulement, sans entrée dans l'historique */
+const sheetFait = $("#sheet-fait");
+sheetFait.addEventListener("click", e => { if(e.target === sheetFait) sheetFait.close(); });
+let faitIds = [];
+function openFait(ids){
+  faitIds = ids;
+  const one = ids.length === 1 ? PLAN_BY_ID[ids[0]] : null;
+  $("#fait-title").textContent = one ? `Fait : ${one.el}` : "Entretien des 6 000 km";
+  $("#fait-desc").textContent = one ? one.op : `Les ${ids.length} opérations de la colonne 6 000 km du tableau du manuel seront notées comme faites.`;
+  const o = odoNow();
+  $("#fait-date").value = isoD(new Date());
+  $("#fait-km").value = o ? Math.round(o.km) : "";
+  $("#fait-err").textContent = "";
+  openDlg(sheetFait);
+}
+["#plan", "#rodage"].forEach(sel => $(sel).addEventListener("click", e => {
+  const u = e.target.closest("[data-unfait]");
+  if(u){
+    const o = S.ops.find(x => x.id === u.dataset.unfait); if(!o) return;
+    confirmClick(u, async () => {
+      try{
+        const rest = o.items.filter(i => i !== u.dataset.item);
+        if(rest.length) await putDoc("operations", o.id, {...raw(o), items:rest}, "ops");
+        else await delDoc("operations", o.id, "ops");
+        toast("Pointage annulé");
+      }catch(err){ toast(errMsg(err)); }
+    });
+    return;
+  }
+  const b = e.target.closest("[data-plan]"); if(b) openFait([b.dataset.plan]);
+}));
+$("#fait-save").addEventListener("click", async () => {
+  const date = $("#fait-date").value, km = parseKm($("#fait-km").value);
+  const fail = (m, el) => { $("#fait-err").textContent = m; if(el) el.focus(); };
+  if(!date) return fail("Choisis la date.", $("#fait-date"));
+  if(!(km >= 0)) return fail("Indique le kilométrage au compteur.", $("#fait-km"));
+  const conflict = kmConflict(parseD(date), km);
+  if(conflict) return fail(conflict + " Vérifie la date ou le kilométrage.", $("#fait-km"));
+  const btn = $("#fait-save"); btn.disabled = true;
+  try{ await addDoc("operations", {type:"pointage", d:date, km, items:faitIds.slice(), autre:"", rodage:false, achats:[], note:""}, "ops"); }
+  catch(err){ btn.disabled = false; return fail(errMsg(err), btn); }
+  btn.disabled = false; sheetFait.close();
+  toast(faitIds.length === 1 ? `Noté : ${planNom(faitIds[0])}` : `Noté : ${faitIds.length} opérations`);
+});
+$("#plan-filter").addEventListener("click", e => {
+  const b = e.target.closest("[data-pf]"); if(!b) return;
+  planFilter = b.dataset.pf; try{ localStorage.setItem("tdr125-plan-filtre", planFilter); }catch(_){}
+  renderPlan();
+});
 $("#o-save").addEventListener("click", async () => {
   const date = $("#o-date").value, km = parseKm($("#o-km").value);
   const items = [...document.querySelectorAll("#o-items input:checked")].map(i => i.value);
-  const autre = $("#o-autre").value.trim();
+  const autre = $("#o-autre").value.trim(), rodage = $("#o-rodage").checked;
   const fail = (m, el) => { $("#o-err").textContent = m; if(el) el.focus(); };
-  if(!date) return fail("Choisis la date de l'opération.", $("#o-date"));
+  if(!date) return fail("Choisis la date de l'entretien.", $("#o-date"));
   if(!(km >= 0)) return fail("Indique le kilométrage au compteur.", $("#o-km"));
-  if(!items.length && !autre) return fail("Coche une opération du plan ou décris-la dans « Autre opération ».", $("#o-autre"));
-  const d = parseD(date), conflict = kmConflict(d, km);
+  if(!autre && !items.length && !rodage) return fail("Décris ce qui a été fait.", $("#o-autre"));
+  const d = parseD(date), conflict = kmConflict(d, km, editOpId);
   if(conflict) return fail(conflict + " Vérifie la date ou le kilométrage.", $("#o-km"));
+  const data = {type:"entretien", d:date, km, items, autre, rodage,
+    achats: [...document.querySelectorAll("#o-achats input:checked")].map(i => i.value),
+    note: $("#o-note").value.trim()};
   const btn = $("#o-save"); btn.disabled = true;
   try{
-    await addDoc("operations", {d:date, km, items, autre,
-      par: document.querySelector('input[name="opar"]:checked').value,
-      achats: [...document.querySelectorAll("#o-achats input:checked")].map(i => i.value),
-      note: $("#o-note").value.trim()}, "ops");
+    if(editOpId) await putDoc("operations", editOpId, data, "ops");
+    else await addDoc("operations", data, "ops");
   }catch(err){ btn.disabled = false; return fail(errMsg(err), btn); }
   btn.disabled = false; sheetOp.close();
-  toast("Opération enregistrée");
+  toast(editOpId ? "Entretien modifié" : "Entretien enregistré");
+  editOpId = null;
+});
+$("#btn-manuel").addEventListener("click", e => {
+  const open = $("#manuel").hidden;
+  $("#manuel").hidden = !open;
+  e.currentTarget.setAttribute("aria-expanded", String(open));
+  e.currentTarget.textContent = open ? "Masquer le tableau original du manuel" : "Voir le tableau original du manuel";
+});
+$("#btn-reglages").addEventListener("click", () => show("reglages"));
+
+/* Bouton + : choisir entre une commande et un entretien */
+const sheetAdd = $("#sheet-add");
+sheetAdd.addEventListener("click", e => {
+  if(e.target === sheetAdd){ sheetAdd.close(); return; }
+  const b = e.target.closest("[data-add]"); if(!b) return;
+  sheetAdd.close();
+  if(b.dataset.add === "entretien") openOp(); else openCommande();
 });
 $("#btn-releve").addEventListener("click", () => {
   const o = odoNow();
@@ -1733,9 +2072,12 @@ function fromAchat(id, x){
 }
 function fromOp(id, x){
   if(!x || !okDate(x.d)) return null;
-  return {id:String(id), d:x.d, date:parseD(x.d), km:+x.km || 0, items:Array.isArray(x.items) ? x.items.map(String) : [],
-    autre:String(x.autre || ""), par:x.par === "garage" ? "garage" : "moi",
-    achats:Array.isArray(x.achats) ? x.achats.map(String) : [], note:String(x.note || ""), cree:+x.cree || 0};
+  return {id:String(id), d:x.d, date:parseD(x.d), km:+x.km || 0,
+    items:normItems(Array.isArray(x.items) ? x.items : [], Array.isArray(x.controles) ? x.controles : []),
+    controles:Array.isArray(x.controles) ? x.controles.map(String) : [],
+    autre:String(x.autre || ""), par:x.par === "garage" ? "garage" : "moi", rodage:!!x.rodage, mo:+x.mo > 0 ? +x.mo : 0,
+    achats:Array.isArray(x.achats) ? x.achats.map(String) : [], note:String(x.note || ""), cree:+x.cree || 0,
+    type:x.type === "pointage" ? "pointage" : "entretien"};
 }
 function fromReleve(id, x){
   if(!x || !okDate(x.d)) return null;
@@ -1759,10 +2101,6 @@ function applyConfig(x){
   syncParamInputs(); renderInsignia();
 }
 function syncParamInputs(){
-  const a = document.activeElement;
-  if(a !== $("#p-nom")) $("#p-nom").value = S.nom;
-  if(a !== $("#p-prix")) $("#p-prix").value = S.prixMoto;
-  if(a !== $("#p-debut")) $("#p-debut").value = isoD(S.debut);
 }
 const configRaw = () => ({prixMoto:S.prixMoto, debut:isoD(S.debut), nom:S.nom, insigne:S.insigne, lastExport:S.lastExport});
 let cfgT;
@@ -1835,6 +2173,14 @@ async function addDoc(col, data, key){
   S[key].push(({operations:fromOp, releves:fromReleve})[col](r.id, r));
   askPersist(); scheduleRender();
 }
+async function putDoc(col, id, data, key){
+  const old = S[key].find(x => x.id === id);
+  const r = {...data, id, cree:old ? old.cree : Date.now()};
+  await IDB.write([col], st => st[col].put(r));
+  const map = ({operations:fromOp, releves:fromReleve})[col];
+  S[key] = S[key].map(x => x.id === id ? map(id, r) : x);
+  scheduleRender();
+}
 async function delDoc(col, id, key){
   await IDB.write([col], st => st[col].delete(id));
   S[key] = S[key].filter(x => x.id !== id); scheduleRender();
@@ -1858,7 +2204,8 @@ async function loadDocs(){
 function renderDocs(){
   $("#docs-list").innerHTML = S.docs.length
     ? S.docs.map(d => `<div class="doc">${ICON_DOC}<button type="button" class="fac-open" data-doc="${esc(d.id)}">${esc(d.titre)}</button><span class="fac-s">${sizeTxt(d.taille)}</span>${canShareFiles ? `<button type="button" class="fac-share" data-docshare="${esc(d.id)}">Partager</button>` : "<span></span>"}</div>`).join("")
-    : `<p class="small doc-empty">Aucun document pour l'instant. Ajoute tes PDF (RMT, manuel du propriétaire…) dans Réglages.</p><button type="button" class="btn-ghost" data-go="reglages">Ajouter dans Réglages</button>`;
+    : `<p class="small doc-empty">Aucun document pour l'instant. Ajoute tes PDF (RMT, manuel du propriétaire, catalogue de pièces…) dans Réglages.</p><button type="button" class="btn-ghost" data-go="reglages">Ajouter dans Réglages</button>`;
+
   $("#docs-admin").innerHTML = S.docs.map(d =>
     `<div class="doc-row"><input class="doc-title" data-doc="${esc(d.id)}" value="${esc(d.titre)}" aria-label="Titre du document" autocomplete="off"><span class="fac-s">${sizeTxt(d.taille)}</span><button type="button" class="fac-del" data-docdel="${esc(d.id)}">Retirer</button></div>`
   ).join("");
@@ -2063,7 +2410,10 @@ function renderDetail(){
     <div><dt>Système</dt><dd>${esc(e.cat)}</dd></div>
     <div><dt>Utilité</dt><dd>${U[e.u].label}</dd></div>
     ${e.note ? `<div><dt>Note</dt><dd>${esc(e.note)}</dd></div>` : ""}
-  </dl>`;
+  </dl>${(() => {
+    const used = S.ops.filter(o => o.achats.includes(e.id)).sort((a,b) => b.date - a.date);
+    return used.length ? `<p class="det-used">Utilisée pour : ${used.map(o => `${esc(opTitle(o))} (${dFull(o.date)})`).join(", ")}</p>` : "";
+  })()}`;
   $("#det-files").innerHTML = e.factures.length
     ? e.factures.map(f => `<div class="fac">${ICON_DOC}<button type="button" class="fac-open" data-open="${esc(f.id)}">${esc(f.nom || "Facture")}</button><span class="fac-s">${f.taille ? sizeTxt(+f.taille) : ""}</span>${canShareFiles ? `<button type="button" class="fac-share" data-share="${esc(f.id)}">Partager</button>` : "<span></span>"}<button type="button" class="fac-del" data-fac="${esc(f.id)}">Retirer</button></div>`).join("")
     : `<p class="small fac-empty">Aucune facture jointe.</p>`;
@@ -2123,8 +2473,10 @@ $("#det-del").addEventListener("click", ev => {
   });
 });
 $("#ops").addEventListener("click", ev => {
+  const ed = ev.target.closest(".op-edit");
+  if(ed){ const o = S.ops.find(x => x.id === ed.dataset.edit); if(o) openOp(null, o); return; }
   const b = ev.target.closest(".op-del"); if(!b) return;
-  confirmClick(b, () => delDoc("operations", b.dataset.op, "ops").then(() => toast("Opération supprimée")).catch(err => toast(errMsg(err))));
+  confirmClick(b, () => delDoc("operations", b.dataset.op, "ops").then(() => toast("Entretien supprimé")).catch(err => toast(errMsg(err))));
 });
 $("#odo-last").addEventListener("click", ev => {
   const b = ev.target.closest(".odo-undo"); if(!b) return;
