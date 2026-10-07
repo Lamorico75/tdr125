@@ -817,12 +817,6 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
         </article>
 
         <article class="plate">
-          <h3 class="plate-t">État de l'entretien</h3>
-          <div id="maint-sum"></div>
-          <button type="button" class="btn-ghost plate-link" data-go="entretien">Voir l'entretien périodique</button>
-        </article>
-
-        <article class="plate">
           <h3 class="plate-t">Répartition des commandes</h3>
           <p class="small pie-sub">Par type de dépense</p>
           <div class="pie-wrap">
@@ -1684,6 +1678,7 @@ function renderHist(){
 }
 
 function renderMaintSummary(){
+  if(!$("#maint-sum")) return;
   const sts = planStates(), c = countStates(sts), o = odoNow();
   const urgent = sts.filter(s => s.st === "over" || s.st === "soon").slice(0,4);
   const next = sts.find(s => s.st === "ok");
