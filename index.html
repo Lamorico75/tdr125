@@ -144,6 +144,11 @@ button{font:inherit}
 .proto{border:1.5px solid var(--signal);color:var(--signal);font-weight:600;padding:1px 8px}
 @media (max-width:520px){ .topbar .since,.topbar .proto{display:none} .topbar{gap:10px;padding:8px 12px} .insignia,.insignia svg{height:40px} .insignia img{height:50px;margin:-5px 0} }
 
+/* En-tête masqué en descendant, réaffiché en remontant */
+.topbar{transition:transform .25s ease}
+.topbar.is-hidden{transform:translateY(calc(-100% - env(safe-area-inset-top,0px) - 2px))}
+@media (prefers-reduced-motion:reduce){ .topbar{transition:none} }
+
 /* ===== Navigation ===== */
 .dock{
   position:fixed;left:0;right:0;bottom:0;z-index:30;
@@ -183,6 +188,8 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
   .dock .new .lbl-short{display:none}
   .dock .new .lbl-long{display:inline}
   main{padding:26px 32px 48px}
+  .dock{transition:top .25s ease}
+  body.hdr-hidden .dock{top:env(safe-area-inset-top,0px)}
 }
 
 /* ===== Vues ===== */
@@ -1949,6 +1956,22 @@ $("#odo-last").addEventListener("click", ev => {
   const b = ev.target.closest(".odo-undo"); if(!b) return;
   confirmClick(b, () => delDoc("releves", b.dataset.rel, "releves").then(() => toast("Relevé annulé")).catch(err => toast(errMsg(err))));
 });
+
+/* En-tête : se cache quand on descend, revient dès qu'on remonte ou en haut de page */
+(() => {
+  const bar = $(".topbar");
+  let lastY = window.scrollY, ticking = false;
+  const setHidden = h => { bar.classList.toggle("is-hidden", h); document.body.classList.toggle("hdr-hidden", h); };
+  function update(){
+    ticking = false;
+    const y = window.scrollY, dy = y - lastY;
+    if(document.querySelector("dialog[open]")){ lastY = y; return; }
+    if(y < 60){ setHidden(false); lastY = y; return; }
+    if(dy > 8){ setHidden(true); lastY = y; }
+    else if(dy < -8){ setHidden(false); lastY = y; }
+  }
+  window.addEventListener("scroll", () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+})();
 
 /* ---------- Démarrage ---------- */
 fitBike();
