@@ -1,6 +1,6 @@
 /* Service worker : garde l'application disponible hors ligne.
    Augmenter VERSION à chaque mise en ligne d'une nouvelle version. */
-const VERSION = "tdr125-v1";
+const VERSION = "tdr125-v2";
 const FICHIERS = [
   "./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.png", "./apple-touch-icon.png",
