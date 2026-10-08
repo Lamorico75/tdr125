@@ -614,6 +614,8 @@ body.is-demo .db-only{display:none}
 .gear:hover{border-color:var(--unit);color:var(--unit)}
 
 /* ===== Plan et historique d'entretien ===== */
+.odo-buy{margin:12px 0 0}
+.odo-buy .link-btn{padding:0 0 0 4px;font-size:.8rem}
 .pc-step{font-size:.8rem;font-weight:600;color:var(--unit-deep)}
 .rodage{border-left:5px solid var(--warn);margin-bottom:6px}
 .rod-bar{position:relative;height:12px;background:var(--seam);margin:12px 0 4px}
@@ -702,6 +704,31 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
 .opt-details summary{cursor:pointer;font-weight:600;font-size:.9rem}
 .opt-details[open] summary{margin-bottom:8px}
 .opt-details .opbox{max-height:300px}
+
+/* ===== Visionneuse ===== */
+.viewer{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#0b1520;color:#e6f6ff;overflow:hidden}
+.viewer[open]{display:flex;flex-direction:column}
+.viewer::backdrop{background:#0b1520}
+.vw-bar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 8px;background:var(--armor);color:var(--ink);border-bottom:3px solid var(--unit)}
+.vw-t{flex:1 1 140px;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+#vw-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#vw-page{font-size:.78rem;color:var(--ink-soft);min-height:1em}
+.vw-tools{display:flex;align-items:center;gap:6px;margin-left:auto}
+.vw-btn{appearance:none;min-width:42px;height:42px;padding:0 10px;background:var(--armor-in);color:var(--ink);border:1.5px solid var(--seam);font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer}
+.vw-btn:disabled{opacity:.35;cursor:default}
+.vw-btn:focus-visible{outline:3px solid var(--focus);outline-offset:1px}
+.vw-close{font-size:1.4rem;line-height:1}
+.vw-share{font-size:.88rem;font-weight:600}
+.vw-zoom{min-width:3.4em;text-align:center;font-size:.8rem;font-weight:600}
+.vw-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom,0px))}
+.vw-pages{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:max-content;min-width:100%;padding:0 8px;box-sizing:border-box}
+.vw-pg{position:relative;flex:none;margin:0 auto;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.55)}
+.vw-pg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vw-pg.vw-err::after{content:"Page illisible";position:absolute;inset:0;display:grid;place-items:center;color:#666;font-size:.9rem}
+.vw-img{display:block;margin:0 auto;height:auto;background:#fff}
+.vw-msg{max-width:440px;margin:15vh auto 0;padding:0 20px;text-align:center}
+.vw-msg p{margin:0 0 14px}
+.vw-msg .btn-ghost{color:#e6f6ff}
 
 /* ===== Message ===== */
 .toast{
@@ -874,6 +901,7 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
           <div class="odo" id="odo" role="img"></div>
           <p class="small" id="odo-last"></p>
           <button type="button" class="btn-ghost" id="btn-releve">Nouveau relevé</button>
+          <p class="small odo-buy" id="odo-buy"></p>
         </div>
         <dl class="odo-stats" id="odo-stats"></dl>
       </article>
@@ -1047,6 +1075,24 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
   </div>
 </dialog>
 
+<!-- ===== Feuille : kilométrage à l'achat ===== -->
+<dialog class="sheet" id="sheet-achat" aria-labelledby="achat-title">
+  <div class="sheet-head">
+    <h2 class="stencil" id="achat-title">Kilométrage à l'achat</h2>
+    <button type="button" class="x" data-close aria-label="Fermer">×</button>
+  </div>
+  <div class="sheet-body">
+    <div class="fields">
+      <label class="f">Kilométrage au compteur le jour de l'achat<input id="a-km" inputmode="numeric" autocomplete="off" placeholder="Ex. 25000"></label>
+      <p class="small" id="a-info"></p>
+      <p class="err" id="a-err" role="alert"></p>
+    </div>
+  </div>
+  <div class="sheet-foot">
+    <button type="button" class="btn-primary" id="a-save">Enregistrer</button>
+  </div>
+</dialog>
+
 <!-- ===== Feuille : relevé kilométrique ===== -->
 <dialog class="sheet" id="sheet-km" aria-labelledby="km-title">
   <div class="sheet-head">
@@ -1089,6 +1135,21 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
   <div class="sheet-foot">
     <button type="button" class="btn-danger" id="det-del">Supprimer la commande</button>
   </div>
+</dialog>
+
+<!-- ===== Visionneuse plein écran (PDF et images) ===== -->
+<dialog class="viewer" id="viewer" aria-labelledby="vw-title">
+  <div class="vw-bar">
+    <button type="button" class="vw-btn vw-close" data-close aria-label="Fermer la visionneuse">×</button>
+    <div class="vw-t"><span id="vw-title"></span><span id="vw-page"></span></div>
+    <div class="vw-tools">
+      <button type="button" class="vw-btn" id="vw-out" aria-label="Dézoomer">−</button>
+      <span class="vw-zoom" id="vw-zoom" aria-live="polite">100 %</span>
+      <button type="button" class="vw-btn" id="vw-in" aria-label="Zoomer">+</button>
+      <button type="button" class="vw-btn vw-share" id="vw-share">Partager</button>
+    </div>
+  </div>
+  <div class="vw-body" id="vw-body"></div>
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1159,6 +1220,7 @@ const S = {
   prixMoto: 1200,
   debut: new Date(2026,2,1),
   nom: "la Reine",
+  kmAchat: null,
   insigne: "officiel",
   sel: null,
   fCat: null, fU: null, q: "",
@@ -1503,8 +1565,11 @@ const ST = {over:{l:"Dépassé",o:0}, soon:{l:"À prévoir",o:1}, never:{l:"À r
 const planNom = id => (PLAN_BY_ID[id] || {}).nom;
 const opTitle = o => o.autre || (o.items.length === 1 ? planNom(o.items[0]) : o.items.length ? `${o.items.length} opérations du plan` : (o.rodage ? "Réfection moteur" : "Entretien"));
 
+const achat = () => S.kmAchat === null ? null : {date:S.debut, km:S.kmAchat, achat:true};
 function readings(exclOp){
-  return [...S.releves, ...S.ops.filter(o => o.id !== exclOp)].map(x => ({date:x.date, km:x.km})).sort((a,b) => a.date - b.date || a.km - b.km);
+  const r = [...S.releves, ...S.ops.filter(o => o.id !== exclOp)].map(x => ({date:x.date, km:x.km}));
+  const a = achat(); if(a) r.push(a);
+  return r.sort((a,b) => a.date - b.date || a.km - b.km);
 }
 function odoNow(){
   const r = readings();
@@ -1516,7 +1581,18 @@ function lastDone(pid){
 function planState(p){
   const last = lastDone(p.id), o = odoNow(), now = new Date();
   if(!p.km && !p.mois) return {p, last, st:"cond", frac:-2, rem:""};
-  if(!last) return {p, last, st:"never", frac:-1, rem:"Jamais renseigné"};
+  if(!last){
+    /* Rien noté depuis l'achat : au mieux, l'opération a été faite juste avant l'achat.
+       Si l'intervalle est déjà écoulé depuis l'achat, elle est forcément en retard. */
+    const a = achat();
+    if(!a || !o) return {p, last, st:"never", frac:-1, rem:"Jamais renseigné"};
+    const runKm = Math.max(0, o.km - a.km), runJ = Math.max(0, Math.round((now - a.date)/864e5));
+    const fk0 = p.km ? runKm/p.km : 0;
+    const ft0 = p.mois ? (now - a.date)/(addMonths(a.date, p.mois) - a.date) : 0;
+    if(Math.max(fk0, ft0) >= 1)
+      return {p, last, st:"over", frac:Math.max(fk0, ft0), rem:`Rien noté depuis l'achat (${p.km && fk0 >= ft0 ? kmFmt(runKm) : durTxt(runJ)})`};
+    return {p, last, st:"never", frac:-1, rem:"Rien noté depuis l'achat"};
+  }
   const fk = p.km && o ? Math.max(0, o.km - last.km)/p.km : 0;
   const due = p.mois ? addMonths(last.date, p.mois) : null;
   const ft = due ? Math.max(0, now - last.date)/(due - last.date) : 0;
@@ -1535,7 +1611,10 @@ function planStates(){
 function countStates(sts){ const c = {over:0,soon:0,never:0,ok:0,cond:0}; sts.forEach(s => c[s.st]++); return c; }
 
 function renderOdo(){
-  const o = odoNow();
+  const o = odoNow(), a = achat();
+  $("#odo-buy").innerHTML = a
+    ? `Achetée à ${kmFmt(a.km)}, le ${dFull(a.date)}. <button type="button" class="link-btn" data-achat-edit>Modifier</button>`
+    : `Kilométrage à l'achat non renseigné. <button type="button" class="link-btn" data-achat-edit>Renseigner</button>`;
   if(!o){
     $("#odo").innerHTML = `<span class="odo-empty">Aucun relevé</span>`;
     $("#odo").setAttribute("aria-label","Aucun relevé");
@@ -1546,16 +1625,19 @@ function renderOdo(){
   $("#odo").innerHTML = String(Math.round(o.km)).padStart(6,"0").split("").map(c => `<span class="dg">${c}</span>`).join("") + `<span class="u">km</span>`;
   $("#odo").setAttribute("aria-label", kmFmt(o.km));
   const lastRel = [...S.releves].sort((a,b) => b.km - a.km || b.date - a.date)[0];
-  $("#odo-last").innerHTML = `Dernier relevé le ${dFull(o.date)}` +
-    (lastRel && lastRel.km === o.km ? `<button type="button" class="odo-undo" data-rel="${esc(lastRel.id)}">Annuler ce relevé</button>` : "");
-  const first = readings()[0];
-  const run = o.km - first.km;
-  const months = Math.max(1, (o.date - first.date)/(864e5*30.4375));
+  $("#odo-last").innerHTML = o.achat
+    ? "Aucun relevé depuis l'achat. Ajoute ton kilométrage actuel."
+    : `Dernier relevé le ${dFull(o.date)}` +
+      (lastRel && lastRel.km === o.km ? `<button type="button" class="odo-undo" data-rel="${esc(lastRel.id)}">Annuler ce relevé</button>` : "");
+  const base = a || readings()[0];
+  const run = o.km - base.km;
+  const months = Math.max(1, (o.date - base.date)/(864e5*30.4375));
   const spent = sum(S.entries);
+  const depuis = a ? "l'achat" : `le ${dFull(base.date)}`;
   $("#odo-stats").innerHTML =
-    `<div><dt>Parcourus depuis le ${dFull(first.date)}</dt><dd>${kmFmt(run)}</dd></div>
-     <div><dt>Moyenne par mois</dt><dd>${kmFmt(run/months)}</dd></div>
-     <div><dt>Dépenses par km parcouru</dt><dd>${run > 0 ? "≈ " + eur(spent/run) : "Pas encore calculable"}</dd></div>`;
+    `<div><dt>Parcourus depuis ${depuis}</dt><dd>${kmFmt(run)}</dd></div>
+     <div><dt>Moyenne par mois</dt><dd>${run > 0 ? kmFmt(run/months) : "–"}</dd></div>
+     <div><dt>Dépenses par km depuis ${a ? "l'achat" : "le premier relevé"}</dt><dd>${run > 0 ? "≈ " + eur(spent/run) : "Pas encore calculable"}</dd></div>`;
 }
 
 /* Suivi de rodage : visible après une réfection moteur, jusqu'à la vidange de boîte qui le clôt */
@@ -1614,7 +1696,7 @@ function renderPlan(){
         <div class="pr-main">
           <div class="pr-op">${esc(s.p.op)}</div>
           <div class="pr-int">${esc(intTxt(s.p))}</div>
-          <div class="pr-last">${s.last ? `Fait le ${dFull(s.last.date)} à ${kmFmt(s.last.km)}${s.last.type === "pointage" ? ` <button type="button" class="pr-undo" data-unfait="${esc(s.last.id)}" data-item="${s.p.id}">Annuler</button>` : " (voir l'historique)"}` : "Jamais enregistré"}</div>
+          <div class="pr-last">${s.last ? `Fait le ${dFull(s.last.date)} à ${kmFmt(s.last.km)}${s.last.type === "pointage" ? ` <button type="button" class="pr-undo" data-unfait="${esc(s.last.id)}" data-item="${s.p.id}">Annuler</button>` : " (voir l'historique)"}` : (S.kmAchat !== null ? `Rien enregistré depuis l'achat à ${kmFmt(S.kmAchat)}` : "Jamais enregistré")}</div>
         </div>
         <div class="pr-side">
           <span class="pc-st">${ST[s.st].l}</span>
@@ -1831,9 +1913,9 @@ const parseMoney = v => { const n = parseFloat(String(v).replace(/[\s\u202f\u00a
 function kmConflict(date, km, exclOp){
   const r = readings(exclOp);
   const before = r.filter(x => x.date <= date && x.km > km).sort((a,b) => b.km - a.km)[0];
-  if(before) return `Le compteur affichait déjà ${kmFmt(before.km)} le ${dFull(before.date)}.`;
+  if(before) return before.achat ? `La moto avait déjà ${kmFmt(before.km)} à l'achat.` : `Le compteur affichait déjà ${kmFmt(before.km)} le ${dFull(before.date)}.`;
   const after = r.filter(x => x.date > date && x.km < km).sort((a,b) => a.km - b.km)[0];
-  if(after) return `Le compteur n'affichait que ${kmFmt(after.km)} le ${dFull(after.date)}.`;
+  if(after) return after.achat ? `Cette date est avant l'achat, où la moto avait ${kmFmt(after.km)}.` : `Le compteur n'affichait que ${kmFmt(after.km)} le ${dFull(after.date)}.`;
   return null;
 }
 const countSel = () => { const n = document.querySelectorAll("#o-items input:checked").length; $("#o-count").textContent = n ? `${plural(n,"opération")} cochée${n>1?"s":""}` : ""; };
@@ -1969,6 +2051,27 @@ sheetAdd.addEventListener("click", e => {
   sheetAdd.close();
   if(b.dataset.add === "entretien") openOp(); else openCommande();
 });
+const sheetAchat = $("#sheet-achat");
+sheetAchat.addEventListener("click", e => { if(e.target === sheetAchat) sheetAchat.close(); });
+$("#odo-buy").addEventListener("click", e => {
+  if(!e.target.closest("[data-achat-edit]")) return;
+  $("#a-km").value = S.kmAchat !== null ? S.kmAchat : "";
+  $("#a-info").textContent = `Date retenue pour l'achat : début du suivi, le ${dFull(S.debut)}. Laisse vide pour effacer.`;
+  $("#a-err").textContent = "";
+  openDlg(sheetAchat);
+  setTimeout(() => $("#a-km").focus(), 30);
+});
+$("#a-save").addEventListener("click", () => {
+  const txt = $("#a-km").value.trim();
+  const km = txt ? parseKm(txt) : null;
+  if(txt && !(km >= 0)) { $("#a-err").textContent = "Indique un kilométrage, par exemple 25000."; return; }
+  if(km !== null){
+    const low = [...S.releves, ...S.ops].filter(x => x.date >= S.debut && x.km < km).sort((a,b) => a.km - b.km)[0];
+    if(low){ $("#a-err").textContent = `Un relevé ou un entretien du ${dFull(low.date)} indique ${kmFmt(low.km)}, moins que ce kilométrage. Corrige-le ou supprime-le d'abord.`; return; }
+  }
+  S.kmAchat = km; saveConfig(); sheetAchat.close(); scheduleRender();
+  toast(km === null ? "Kilométrage à l'achat effacé" : `Kilométrage à l'achat : ${kmFmt(km)}`);
+});
 $("#btn-releve").addEventListener("click", () => {
   const o = odoNow();
   $("#k-date").value = isoD(new Date());
@@ -2093,11 +2196,12 @@ function applyConfig(x){
   if(typeof x.nom === "string") S.nom = x.nom;
   if(INSIGNIA[x.insigne]) S.insigne = x.insigne;
   S.lastExport = typeof x.lastExport === "string" ? x.lastExport : null;
+  S.kmAchat = Number.isInteger(x.kmAchat) && x.kmAchat >= 0 ? x.kmAchat : null;
   syncParamInputs(); renderInsignia();
 }
 function syncParamInputs(){
 }
-const configRaw = () => ({prixMoto:S.prixMoto, debut:isoD(S.debut), nom:S.nom, insigne:S.insigne, lastExport:S.lastExport});
+const configRaw = () => ({prixMoto:S.prixMoto, debut:isoD(S.debut), nom:S.nom, insigne:S.insigne, lastExport:S.lastExport, kmAchat:S.kmAchat});
 let cfgT;
 function saveConfig(){
   clearTimeout(cfgT);
@@ -2223,9 +2327,7 @@ async function openDoc(id, share){
       await navigator.share({files:[new File([rec.blob], name, {type:"application/pdf"})], title:rec.titre});
       return;
     }
-    const url = URL.createObjectURL(rec.blob);
-    const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 120000);
+    openViewer({blob:rec.blob, name, title:rec.titre || name, type:"application/pdf"});
   }catch(e){ if(e && e.name !== "AbortError") toast("Impossible d'ouvrir ce document sur cet appareil."); }
 }
 $("#doc-add").addEventListener("click", () => { $("#doc-err").textContent = ""; $("#doc-file").click(); });
@@ -2394,6 +2496,201 @@ let detId = null;
 function openDetail(id){ detId = id; $("#det-err").textContent = ""; $("#det-busy").textContent = ""; renderDetail(); openDlg(sheetDet); }
 function refreshDetail(){ if(detId && sheetDet.open) renderDetail(); }
 const canShareFiles = (() => { try{ return !!(navigator.canShare && navigator.canShare({files:[new File(["x"], "x.pdf", {type:"application/pdf"})]})); }catch(_){ return false; } })();
+/* ---------- Visionneuse intégrée (PDF et images) ----------
+   PDF.js (Mozilla, licence Apache 2.0) est embarqué dans l'application : les documents
+   s'ouvrent dans l'appli, y compris hors connexion, au lieu d'être téléchargés. */
+let pdfjsP = null;
+function loadPdfjs(){
+  if(!pdfjsP){
+    pdfjsP = import(new URL("./pdfjs.min.js", location.href).href).then(m => {
+      m.GlobalWorkerOptions.workerSrc = new URL("./pdfjs.worker.min.js", location.href).href;
+      return m;
+    }).catch(e => { pdfjsP = null; throw e; });
+  }
+  return pdfjsP;
+}
+const viewer = $("#viewer"), vwBody = $("#vw-body");
+const ZOOMS = [1, 1.5, 2, 3];
+const VW = {task:null, doc:null, pages:[], zoom:0, io:null, ro:null, fitW:0, ratio:1.414, blob:null, name:"", type:"", url:null, img:null, gen:0, byPop:false};
+
+function vwFitWidth(){ return Math.min(vwBody.clientWidth - 16, 900); }
+function vwSetZoomUI(){
+  $("#vw-out").disabled = VW.zoom <= 0;
+  $("#vw-in").disabled = VW.zoom >= ZOOMS.length - 1;
+  $("#vw-zoom").textContent = Math.round(ZOOMS[VW.zoom] * 100) + " %";
+}
+function vwLayout(){
+  VW.fitW = vwFitWidth();
+  const w = Math.round(VW.fitW * ZOOMS[VW.zoom]);
+  if(VW.img){ VW.img.style.width = w + "px"; return; }
+  VW.pages.forEach(p => {
+    p.el.style.width = w + "px";
+    p.el.style.height = Math.round(w * (p.ratio || VW.ratio)) + "px";
+    p.dirty = true;
+  });
+}
+function vwFree(p){
+  if(p.task){ try{ p.task.cancel(); }catch(_){} p.task = null; }
+  if(p.canvas){ p.canvas.width = 0; p.canvas.height = 0; p.canvas.remove(); p.canvas = null; }
+  p.dirty = true;
+}
+async function vwRender(p){
+  if(!VW.doc || p.task || (!p.dirty && p.canvas)) return;
+  const gen = VW.gen;
+  try{
+    const page = p.page || (p.page = await VW.doc.getPage(p.n));
+    if(gen !== VW.gen) return;
+    const v1 = page.getViewport({scale:1});
+    p.ratio = v1.height / v1.width;
+    const cssW = Math.round(VW.fitW * ZOOMS[VW.zoom]), cssH = Math.round(cssW * p.ratio);
+    p.el.style.height = cssH + "px";
+    /* Netteté selon l'écran, plafonnée pour ne pas saturer la mémoire du téléphone */
+    const out = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(8e6 / (cssW * cssH)));
+    const vp = page.getViewport({scale:(cssW / v1.width) * out});
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.floor(vp.width); canvas.height = Math.floor(vp.height);
+    p.task = page.render({canvasContext:canvas.getContext("2d"), viewport:vp});
+    await p.task.promise;
+    p.task = null;
+    if(gen !== VW.gen){ canvas.width = 0; return; }
+    if(p.canvas){ p.canvas.width = 0; p.canvas.remove(); }
+    p.canvas = canvas; p.dirty = false;
+    p.el.appendChild(canvas);
+  }catch(e){
+    p.task = null;
+    if(e && e.name === "RenderingCancelledException") return;
+    p.el.classList.add("vw-err");
+  }
+}
+function vwRenderVisible(){
+  const top = vwBody.scrollTop - vwBody.clientHeight, bot = vwBody.scrollTop + 2 * vwBody.clientHeight;
+  VW.pages.forEach(p => { const y = p.el.offsetTop, h = p.el.offsetHeight; if(y + h > top && y < bot) vwRender(p); });
+}
+let vwTick = false;
+function vwOnScroll(){
+  if(vwTick || !VW.pages.length) return; vwTick = true;
+  requestAnimationFrame(() => {
+    vwTick = false;
+    const mid = vwBody.scrollTop + vwBody.clientHeight / 3;
+    let n = 1;
+    for(const p of VW.pages){ if(p.el.offsetTop <= mid) n = p.n; else break; }
+    $("#vw-page").textContent = `Page ${n} / ${VW.pages.length}`;
+  });
+}
+vwBody.addEventListener("scroll", vwOnScroll, {passive:true});
+
+function vwZoom(step){
+  const z = Math.max(0, Math.min(ZOOMS.length - 1, VW.zoom + step));
+  if(z === VW.zoom) return;
+  const fy = vwBody.scrollHeight ? (vwBody.scrollTop + vwBody.clientHeight / 2) / vwBody.scrollHeight : 0;
+  const fx = vwBody.scrollWidth ? (vwBody.scrollLeft + vwBody.clientWidth / 2) / vwBody.scrollWidth : .5;
+  VW.zoom = z; vwSetZoomUI(); vwLayout();
+  vwBody.scrollTop = fy * vwBody.scrollHeight - vwBody.clientHeight / 2;
+  vwBody.scrollLeft = fx * vwBody.scrollWidth - vwBody.clientWidth / 2;
+  vwRenderVisible();
+}
+$("#vw-in").addEventListener("click", () => vwZoom(1));
+$("#vw-out").addEventListener("click", () => vwZoom(-1));
+$("#vw-share").addEventListener("click", async () => {
+  if(!VW.blob) return;
+  const file = new File([VW.blob], VW.name, {type:VW.type || "application/pdf"});
+  if(canShareFiles){
+    try{ await navigator.share({files:[file], title:VW.name}); }
+    catch(e){ if(e && e.name !== "AbortError") toast("Partage impossible pour ce fichier."); }
+  } else vwDownload();
+});
+function vwDownload(){
+  const url = URL.createObjectURL(VW.blob);
+  const a = document.createElement("a"); a.href = url; a.download = VW.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+function vwReset(){
+  VW.gen++;
+  if(VW.io){ VW.io.disconnect(); VW.io = null; }
+  VW.pages.forEach(vwFree); VW.pages = [];
+  if(VW.task){ try{ VW.task.destroy(); }catch(_){} }
+  VW.task = null; VW.doc = null; VW.img = null;
+  if(VW.url){ URL.revokeObjectURL(VW.url); VW.url = null; }
+  vwBody.innerHTML = "";
+}
+function vwMessage(txt){
+  vwBody.innerHTML = `<div class="vw-msg"><p>${esc(txt)}</p><button type="button" class="btn-ghost" id="vw-dl">${canShareFiles ? "Ouvrir avec une autre application" : "Télécharger le fichier"}</button></div>`;
+  $("#vw-dl").addEventListener("click", () => canShareFiles ? $("#vw-share").click() : vwDownload());
+}
+
+/* Ouvre un fichier (PDF, JPEG ou PNG) dans la visionneuse plein écran */
+async function openViewer({blob, name, title, type}){
+  vwReset();
+  const gen = VW.gen;
+  VW.blob = blob; VW.name = name; VW.type = type || blob.type || "application/pdf"; VW.zoom = 0;
+  $("#vw-title").textContent = title || name;
+  $("#vw-page").textContent = "";
+  $("#vw-share").textContent = canShareFiles ? "Partager" : "Télécharger";
+  vwSetZoomUI();
+  if(!viewer.open){
+    if(typeof viewer.showModal === "function") viewer.showModal(); else viewer.setAttribute("open", "");
+    try{ history.pushState({vw:1}, ""); }catch(_){}
+  }
+  VW.fitW = vwFitWidth();
+  if(VW.type.startsWith("image/")){
+    VW.url = URL.createObjectURL(blob);
+    const img = document.createElement("img");
+    img.className = "vw-img"; img.alt = title || name; img.src = VW.url;
+    VW.img = img;
+    const wrap = document.createElement("div"); wrap.className = "vw-pages"; wrap.appendChild(img);
+    vwBody.appendChild(wrap); vwLayout();
+    return;
+  }
+  vwBody.innerHTML = `<div class="vw-msg"><p>Ouverture du document…</p></div>`;
+  let lib;
+  try{ lib = await loadPdfjs(); }
+  catch(_){ if(gen === VW.gen) vwMessage("La visionneuse n'a pas pu se charger. Reconnecte-toi une fois à Internet pour la mettre en cache."); return; }
+  try{
+    const data = new Uint8Array(await blob.arrayBuffer());
+    VW.task = lib.getDocument({data, wasmUrl:new URL("./", location.href).href, isEvalSupported:false, enableXfa:false});
+    const doc = await VW.task.promise;
+    if(gen !== VW.gen){ doc.destroy(); return; }
+    VW.doc = doc;
+    const p1 = await doc.getPage(1);
+    const v1 = p1.getViewport({scale:1});
+    VW.ratio = v1.height / v1.width;
+    const wrap = document.createElement("div"); wrap.className = "vw-pages";
+    VW.pages = Array.from({length:doc.numPages}, (_, i) => {
+      const el = document.createElement("div"); el.className = "vw-pg"; el.dataset.n = i + 1;
+      el.setAttribute("aria-label", `Page ${i + 1}`);
+      wrap.appendChild(el);
+      return {n:i + 1, el, page:i === 0 ? p1 : null, ratio:i === 0 ? VW.ratio : null, canvas:null, task:null, dirty:true};
+    });
+    vwBody.innerHTML = ""; vwBody.appendChild(wrap);
+    vwLayout();
+    $("#vw-page").textContent = `Page 1 / ${doc.numPages}`;
+    /* Seules les pages proches de l'écran sont dessinées ; les autres sont libérées */
+    VW.io = new IntersectionObserver(entries => entries.forEach(en => {
+      const p = VW.pages[+en.target.dataset.n - 1]; if(!p) return;
+      if(en.isIntersecting) vwRender(p); else vwFree(p);
+    }), {root:vwBody, rootMargin:"150% 0px"});
+    VW.pages.forEach(p => VW.io.observe(p.el));
+  }catch(e){
+    if(gen !== VW.gen) return;
+    vwMessage(e && e.name === "PasswordException" ? "Ce PDF est protégé par un mot de passe." : "Impossible d'afficher ce PDF dans l'application.");
+  }
+}
+VW.ro = new ResizeObserver(() => {
+  if(!viewer.open) return;
+  const w = vwFitWidth();
+  if(Math.abs(w - VW.fitW) > 2){ vwLayout(); vwRenderVisible(); }
+});
+VW.ro.observe(vwBody);
+viewer.addEventListener("close", () => {
+  vwReset(); VW.blob = null;
+  if(!VW.byPop && history.state && history.state.vw){ try{ history.back(); }catch(_){} }
+  VW.byPop = false;
+});
+/* Bouton retour d'Android : ferme la visionneuse au lieu de quitter l'application */
+window.addEventListener("popstate", () => { if(viewer.open){ VW.byPop = true; viewer.close(); } });
+
+
 function renderDetail(){
   const e = S.entries.find(x => x.id === detId);
   if(!e){ if(sheetDet.open) sheetDet.close(); detId = null; return; }
@@ -2423,10 +2720,7 @@ async function getFile(fid){
 async function openFacture(fid){
   try{
     const rec = await getFile(fid);
-    const url = URL.createObjectURL(rec.blob);
-    if(String(rec.type).startsWith("image/")) window.open(url, "_blank");
-    else { const a = document.createElement("a"); a.href = url; a.download = rec.nom || "facture.pdf"; document.body.appendChild(a); a.click(); a.remove(); }
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    openViewer({blob:rec.blob, name:rec.nom || "facture.pdf", title:rec.nom || "Facture", type:rec.type});
   }catch(_){ $("#det-err").textContent = "Fichier introuvable sur cet appareil."; }
 }
 async function shareFacture(fid){

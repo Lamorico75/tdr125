@@ -1,10 +1,11 @@
 /* Service worker : garde l'application disponible hors ligne.
    Augmenter VERSION à chaque mise en ligne d'une nouvelle version. */
-const VERSION = "tdr125-v2";
+const VERSION = "tdr125-v3";
 const FICHIERS = [
   "./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.png", "./apple-touch-icon.png",
-  "./chakra-400.woff2", "./chakra-500.woff2", "./chakra-600.woff2", "./chakra-700.woff2", "./saira-stencil.woff2"
+  "./chakra-400.woff2", "./chakra-500.woff2", "./chakra-600.woff2", "./chakra-700.woff2", "./saira-stencil.woff2",
+  "./pdfjs.min.js", "./pdfjs.worker.min.js", "./jbig2.wasm", "./openjpeg.wasm"
 ];
 
 self.addEventListener("install", e => {
