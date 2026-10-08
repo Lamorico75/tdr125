@@ -1078,12 +1078,15 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
 <!-- ===== Feuille : kilométrage à l'achat ===== -->
 <dialog class="sheet" id="sheet-achat" aria-labelledby="achat-title">
   <div class="sheet-head">
-    <h2 class="stencil" id="achat-title">Kilométrage à l'achat</h2>
+    <h2 class="stencil" id="achat-title">Achat de la moto</h2>
     <button type="button" class="x" data-close aria-label="Fermer">×</button>
   </div>
   <div class="sheet-body">
     <div class="fields">
-      <label class="f">Kilométrage au compteur le jour de l'achat<input id="a-km" inputmode="numeric" autocomplete="off" placeholder="Ex. 25000"></label>
+      <div class="f-row">
+        <label class="f">Date d'achat<input id="a-date" type="date"></label>
+        <label class="f">Kilométrage à l'achat<input id="a-km" inputmode="numeric" autocomplete="off" placeholder="Ex. 25000"></label>
+      </div>
       <p class="small" id="a-info"></p>
       <p class="err" id="a-err" role="alert"></p>
     </div>
@@ -1220,7 +1223,10 @@ const S = {
   prixMoto: 1200,
   debut: new Date(2026,2,1),
   nom: "la Reine",
-  kmAchat: null,
+  /* Achat de la moto (donnée d'entrée), modifiable dans l'onglet Entretien périodique */
+  kmAchat: 31430,
+  dateAchat: new Date(2026,2,18),
+  achatOk: false,
   insigne: "officiel",
   sel: null,
   fCat: null, fU: null, q: "",
@@ -1565,7 +1571,7 @@ const ST = {over:{l:"Dépassé",o:0}, soon:{l:"À prévoir",o:1}, never:{l:"À r
 const planNom = id => (PLAN_BY_ID[id] || {}).nom;
 const opTitle = o => o.autre || (o.items.length === 1 ? planNom(o.items[0]) : o.items.length ? `${o.items.length} opérations du plan` : (o.rodage ? "Réfection moteur" : "Entretien"));
 
-const achat = () => S.kmAchat === null ? null : {date:S.debut, km:S.kmAchat, achat:true};
+const achat = () => S.kmAchat === null ? null : {date:S.dateAchat, km:S.kmAchat, achat:true};
 function readings(exclOp){
   const r = [...S.releves, ...S.ops.filter(o => o.id !== exclOp)].map(x => ({date:x.date, km:x.km}));
   const a = achat(); if(a) r.push(a);
@@ -1613,7 +1619,7 @@ function countStates(sts){ const c = {over:0,soon:0,never:0,ok:0,cond:0}; sts.fo
 function renderOdo(){
   const o = odoNow(), a = achat();
   $("#odo-buy").innerHTML = a
-    ? `Achetée à ${kmFmt(a.km)}, le ${dFull(a.date)}. <button type="button" class="link-btn" data-achat-edit>Modifier</button>`
+    ? `Achetée le ${dFull(a.date)} à ${kmFmt(a.km)}. <button type="button" class="link-btn" data-achat-edit>Modifier</button>`
     : `Kilométrage à l'achat non renseigné. <button type="button" class="link-btn" data-achat-edit>Renseigner</button>`;
   if(!o){
     $("#odo").innerHTML = `<span class="odo-empty">Aucun relevé</span>`;
@@ -1796,10 +1802,10 @@ function renderAll(){
 }
 
 let toastT;
-function toast(msg){
+function toast(msg, ms){
   const t = $("#toast");
   t.textContent = msg; t.classList.add("show");
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 3200);
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), ms || 3200);
 }
 
 function show(view){
@@ -2053,24 +2059,74 @@ sheetAdd.addEventListener("click", e => {
 });
 const sheetAchat = $("#sheet-achat");
 sheetAchat.addEventListener("click", e => { if(e.target === sheetAchat) sheetAchat.close(); });
+/* Entrées impossibles par rapport à l'achat : sous le kilométrage d'achat après la date d'achat, ou au-dessus avant */
+function achatConflicts(date, km){
+  const bad = x => (x.date >= date && x.km < km) || (x.date < date && x.km > km);
+  return {
+    releves: S.releves.filter(bad),
+    pointages: S.ops.filter(o => o.type === "pointage" && bad(o)),
+    entretiens: S.ops.filter(o => o.type !== "pointage" && bad(o))
+  };
+}
+async function deleteConflicts(c){
+  if(!c.releves.length && !c.pointages.length) return;
+  await IDB.write(["releves","operations"], st => {
+    c.releves.forEach(r => st.releves.delete(r.id));
+    c.pointages.forEach(o => st.operations.delete(o.id));
+  });
+  S.releves = S.releves.filter(r => !c.releves.includes(r));
+  S.ops = S.ops.filter(o => !c.pointages.includes(o));
+}
+const conflictTxt = c => [
+  c.releves.length ? `${plural(c.releves.length,"relevé")} (${c.releves.map(r => `${kmFmt(r.km)} le ${dFull(r.date)}`).join(", ")})` : "",
+  c.pointages.length ? `${plural(c.pointages.length,"opération")} cochée${c.pointages.length>1?"s":""} « Fait » (${[...new Set(c.pointages.map(o => kmFmt(o.km)))].join(", ")})` : ""
+].filter(Boolean).join(" et ");
+/* Première ouverture de cette version : l'achat est pris en compte et les relevés impossibles sont supprimés */
+async function migrateAchat(){
+  if(S.achatOk) return;
+  const a = achat();
+  const c = a ? achatConflicts(a.date, a.km) : {releves:[], pointages:[], entretiens:[]};
+  try{ await deleteConflicts(c); }catch(e){ toast(errMsg(e)); return; }
+  S.achatOk = true; saveConfig();
+  if(a) setTimeout(() => toast(`Achat pris en compte : ${dFull(a.date)}, ${kmFmt(a.km)}.` + (c.releves.length || c.pointages.length ? ` Supprimé : ${conflictTxt(c)}.` : ""), 7000), 1900);
+}
+let achatPending = null;
 $("#odo-buy").addEventListener("click", e => {
   if(!e.target.closest("[data-achat-edit]")) return;
   $("#a-km").value = S.kmAchat !== null ? S.kmAchat : "";
-  $("#a-info").textContent = `Date retenue pour l'achat : début du suivi, le ${dFull(S.debut)}. Laisse vide pour effacer.`;
-  $("#a-err").textContent = "";
+  $("#a-date").value = isoD(S.dateAchat);
+  $("#a-info").textContent = "Les échéances jamais notées et les statistiques du compteur partent de l'achat.";
+  $("#a-err").textContent = ""; $("#a-save").textContent = "Enregistrer"; achatPending = null;
   openDlg(sheetAchat);
   setTimeout(() => $("#a-km").focus(), 30);
 });
-$("#a-save").addEventListener("click", () => {
-  const txt = $("#a-km").value.trim();
+$("#a-save").addEventListener("click", async () => {
+  const txt = $("#a-km").value.trim(), ds = $("#a-date").value;
   const km = txt ? parseKm(txt) : null;
-  if(txt && !(km >= 0)) { $("#a-err").textContent = "Indique un kilométrage, par exemple 25000."; return; }
+  const fail = m => { $("#a-err").textContent = m; $("#a-save").textContent = "Enregistrer"; achatPending = null; };
+  if(txt && !(km >= 0)) return fail("Indique un kilométrage, par exemple 25000.");
+  if(!ds) return fail("Choisis la date d'achat.");
+  const date = parseD(ds);
+  let c = {releves:[], pointages:[], entretiens:[]};
   if(km !== null){
-    const low = [...S.releves, ...S.ops].filter(x => x.date >= S.debut && x.km < km).sort((a,b) => a.km - b.km)[0];
-    if(low){ $("#a-err").textContent = `Un relevé ou un entretien du ${dFull(low.date)} indique ${kmFmt(low.km)}, moins que ce kilométrage. Corrige-le ou supprime-le d'abord.`; return; }
+    c = achatConflicts(date, km);
+    if(c.entretiens.length){
+      const o = c.entretiens[0];
+      return fail(`L'entretien « ${opTitle(o)} » du ${dFull(o.date)} indique ${kmFmt(o.km)}, impossible avec cet achat. Corrige son kilométrage dans l'historique (Modifier) d'abord.`);
+    }
+    const key = `${ds}|${km}`;
+    if((c.releves.length || c.pointages.length) && achatPending !== key){
+      achatPending = key;
+      $("#a-err").textContent = `Incohérent avec cet achat : ${conflictTxt(c)}. Touche à nouveau pour les supprimer et enregistrer.`;
+      $("#a-save").textContent = "Supprimer et enregistrer";
+      return;
+    }
   }
-  S.kmAchat = km; saveConfig(); sheetAchat.close(); scheduleRender();
-  toast(km === null ? "Kilométrage à l'achat effacé" : `Kilométrage à l'achat : ${kmFmt(km)}`);
+  try{ await deleteConflicts(c); }catch(e){ return fail(errMsg(e)); }
+  S.kmAchat = km; S.dateAchat = date; S.achatOk = true; saveConfig();
+  achatPending = null; $("#a-save").textContent = "Enregistrer";
+  sheetAchat.close(); scheduleRender();
+  toast(km === null ? "Kilométrage à l'achat effacé" : `Achat : ${dFull(date)}, ${kmFmt(km)}`);
 });
 $("#btn-releve").addEventListener("click", () => {
   const o = odoNow();
@@ -2196,12 +2252,16 @@ function applyConfig(x){
   if(typeof x.nom === "string") S.nom = x.nom;
   if(INSIGNIA[x.insigne]) S.insigne = x.insigne;
   S.lastExport = typeof x.lastExport === "string" ? x.lastExport : null;
-  S.kmAchat = Number.isInteger(x.kmAchat) && x.kmAchat >= 0 ? x.kmAchat : null;
+  if(x.achatOk){
+    S.achatOk = true;
+    S.kmAchat = Number.isInteger(x.kmAchat) && x.kmAchat >= 0 ? x.kmAchat : null;
+    if(okDate(x.dateAchat)) S.dateAchat = parseD(x.dateAchat);
+  }
   syncParamInputs(); renderInsignia();
 }
 function syncParamInputs(){
 }
-const configRaw = () => ({prixMoto:S.prixMoto, debut:isoD(S.debut), nom:S.nom, insigne:S.insigne, lastExport:S.lastExport, kmAchat:S.kmAchat});
+const configRaw = () => ({prixMoto:S.prixMoto, debut:isoD(S.debut), nom:S.nom, insigne:S.insigne, lastExport:S.lastExport, kmAchat:S.kmAchat, dateAchat:isoD(S.dateAchat), achatOk:S.achatOk});
 let cfgT;
 function saveConfig(){
   clearTimeout(cfgT);
@@ -2800,7 +2860,7 @@ setTimeout(() => { minElapsed = true; maybeCloseSplash(); }, reduceMotion ? 700 
 setTimeout(closeSplash, 12000);
 
 async function boot(){
-  try{ await IDB.open(); await loadAll(); }
+  try{ await IDB.open(); await loadAll(); await migrateAchat(); }
   catch(e){ toast(errMsg(e)); }
   syncParamInputs(); renderInsignia(); renderAll(); renderDataStatus(); renderDocs();
   if(hasData()) askPersist();
