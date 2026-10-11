@@ -396,7 +396,7 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 .chip[aria-pressed="true"],.segb[aria-pressed="true"]{background:var(--unit);border-color:var(--unit);color:#fff}
 .seg{display:flex;flex-wrap:wrap}
 .segb + .segb{margin-left:-1.5px}
-#v-journal .filters,#jsum,#jlist,#dlist{max-width:900px}
+#v-journal .filters,#jlist,#dlist{max-width:900px}
 .j-sum{margin:6px 0 4px;color:var(--on-hangar-soft);font-size:.9rem}
 .month-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:22px 0 8px}
 .month-head h3{margin:0;font-size:1.2rem;font-weight:400}
@@ -955,7 +955,6 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
         <div class="chips" id="chips" role="group" aria-label="Filtrer par système"></div>
         <div class="seg" id="segU" role="group" aria-label="Filtrer par utilité"></div>
       </div>
-      <p class="j-sum" id="jsum"></p>
       <div id="jlist"></div>
     </section>
 
@@ -1590,7 +1589,6 @@ function renderJournal(){
     .filter(e => (!S.fCat || e.cat === S.fCat) && (!S.fU || e.u === S.fU) &&
                  (!q || (e.objet+" "+e.site+" "+e.cat).toLowerCase().includes(q)))
     .sort(byDateDesc);
-  $("#jsum").textContent = `${plural(es.length,"commande")}, ${eur(sum(es))}`;
   if(!es.length){
     $("#jlist").innerHTML = `<div class="empty"><p>Aucune commande ne correspond à ces filtres.</p><button type="button" class="btn-ghost" id="clear-f">Effacer les filtres</button></div>`;
     return;
