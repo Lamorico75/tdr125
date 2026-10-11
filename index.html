@@ -431,7 +431,7 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 .segopt input{position:absolute;opacity:0;width:1px;height:1px}
 .segopt span{display:block;padding:10px 12px;border:1.5px solid var(--seam);background:var(--armor-in);cursor:pointer;font-size:.9rem}
 .segopt input:checked + span{background:var(--unit);border-color:var(--unit);color:#fff}
-.segopt input[value="3"]:checked + span{background:var(--signal);border-color:var(--signal)}
+.segopt input[value="3"]:checked + span,.segopt input[value="urgent"]:checked + span{background:var(--signal);border-color:var(--signal)}
 .segopt input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px;position:relative;z-index:1}
 .err{margin:0;color:#B3261E;font-weight:600;font-size:.88rem;min-height:1.2em}
 
@@ -730,6 +730,24 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
 .vw-msg p{margin:0 0 14px}
 .vw-msg .btn-ghost{color:#e6f6ff}
 
+/* ===== Notes à faire ===== */
+.notes-empty{margin:0 0 10px;color:var(--on-hangar-soft)}
+.note{--cut:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:start;background:var(--armor);color:var(--ink);padding:10px 12px;margin-bottom:6px;border-left:5px solid var(--unit);clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.note.st-none{border-left-color:var(--p2)}
+.note.st-soon{border-left-color:var(--warn)}
+.note.st-over{border-left-color:var(--signal)}
+.nt-txt{font-weight:600;line-height:1.3;white-space:pre-wrap;overflow-wrap:anywhere}
+.nt-meta{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin-top:4px;font-size:.78rem;color:var(--ink-soft)}
+.nt-prio{background:var(--signal-deep);color:#fff;font-weight:700;font-size:.7rem;padding:1px 7px}
+.nt-rem{margin-top:3px;font-size:.8rem;font-weight:700}
+.note.st-soon .nt-rem{color:#8a5a00}
+.note.st-over .nt-rem{color:var(--signal-deep)}
+.nt-done{appearance:none;align-self:center;min-height:42px;padding:6px 14px;background:var(--armor-in);color:var(--unit-deep);border:1.5px solid var(--unit);font:inherit;font-weight:700;font-size:.88rem;cursor:pointer}
+.nt-done:hover{background:var(--unit);color:#fff}
+.nt-done:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.note .op-actions{margin-top:4px}
+.note-add{margin:4px 0 6px}
+
 /* ===== Message ===== */
 .toast{
   position:fixed;left:50%;transform:translate(-50%,12px);z-index:60;
@@ -786,7 +804,7 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
     </button>
     <button type="button" data-view="historique">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3 4v4h4"/><path d="M12 7.5V12l3 2"/></svg>
-      <span class="lbl-m">Historique<br>entretiens</span><span class="lbl-d">Historique des entretiens</span>
+      <span class="lbl-m">Mes<br>entretiens</span><span class="lbl-d">Mes entretiens</span>
     </button>
   </nav>
 
@@ -925,8 +943,12 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
 
     <!-- ===== HISTORIQUE DES ENTRETIENS ===== -->
     <section class="view" id="v-historique" aria-labelledby="t-historique">
-      <h2 class="sec-title stencil" id="t-historique">Historique des entretiens</h2>
-      <p class="lede">Entretiens réalisés, avec les commandes utilisées et leur coût.</p>
+      <h2 class="sec-title stencil" id="t-historique">Mes entretiens</h2>
+      <p class="lede">Ce qui reste à faire, puis les entretiens réalisés avec les commandes utilisées.</p>
+      <div class="sub-head"><h3 class="stencil">À faire</h3><span id="notes-sum"></span></div>
+      <div id="notes"></div>
+      <button type="button" class="btn-ghost note-add" id="note-add">Ajouter une note</button>
+      <div class="sub-head"><h3 class="stencil">Historique</h3><span id="ops-sum"></span></div>
       <div id="ops"></div>
     </section>
 
@@ -1057,6 +1079,35 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
   </div>
 </dialog>
 
+<!-- ===== Feuille : note à faire ===== -->
+<dialog class="sheet" id="sheet-note" aria-labelledby="note-title">
+  <div class="sheet-head">
+    <h2 class="stencil" id="note-title">Note à faire</h2>
+    <button type="button" class="x" data-close aria-label="Fermer">×</button>
+  </div>
+  <div class="sheet-body">
+    <div class="fields">
+      <label class="f">À faire<textarea id="n-texte" rows="2" placeholder="Ex. changer les joints spi de fourche"></textarea></label>
+      <fieldset class="f">
+        <legend>Priorité</legend>
+        <div class="segopts">
+          <label class="segopt"><input type="radio" name="nprio" value="normal" checked><span>Quand j'ai le temps</span></label>
+          <label class="segopt"><input type="radio" name="nprio" value="urgent"><span>Urgent</span></label>
+        </div>
+      </fieldset>
+      <div class="f-row">
+        <label class="f">Avant (km), facultatif<input id="n-km" inputmode="numeric" autocomplete="off"></label>
+        <label class="f">Avant le, facultatif<input id="n-date" type="date"></label>
+      </div>
+      <p class="small">Laisse vide s'il n'y a pas d'échéance. Si tu remplis les deux, la première atteinte compte.</p>
+      <p class="err" id="n-err" role="alert"></p>
+    </div>
+  </div>
+  <div class="sheet-foot">
+    <button type="button" class="btn-primary" id="n-save">Enregistrer la note</button>
+  </div>
+</dialog>
+
 <!-- ===== Feuille : choix du bouton + ===== -->
 <dialog class="sheet sheet-add" id="sheet-add" aria-labelledby="add-title">
   <div class="sheet-head">
@@ -1071,6 +1122,10 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
     <button type="button" class="add-choice" data-add="entretien">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.9-5.9a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.3-.6-.6-2.3z"/></svg>
       <span><b>Un entretien</b><small>Opérations faites sur la moto, liées à tes commandes</small></span>
+    </button>
+    <button type="button" class="add-choice" data-add="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M8 9h8M8 13h8M8 17h5"/><path d="M9 3.5V2.5h6v1"/></svg>
+      <span><b>Une note à faire</b><small>Travail à prévoir, avec une échéance si tu veux</small></span>
     </button>
   </div>
 </dialog>
@@ -1742,6 +1797,7 @@ function renderHist(){
   const ops = S.ops.filter(o => o.type !== "pointage").sort((a,b) => b.date - a.date || b.km - a.km);
   const byId = Object.fromEntries(S.entries.map(e => [e.id, e]));
   const parts = o => o.achats.map(id => byId[id]).filter(Boolean);
+  $("#ops-sum").textContent = ops.length ? plural(ops.length, "entretien") : "";
   if(!ops.length){
     $("#ops").innerHTML = `<div class="empty"><p>Aucun entretien enregistré pour l'instant. Ajoute-en un avec le bouton Ajouter, puis « Un entretien ».</p></div>`;
     return;
@@ -1779,7 +1835,7 @@ function renderMaintSummary(){
 }
 
 function renderEntretien(){
-  renderOdo(); renderRodage(); renderPlan(); renderHist();
+  renderOdo(); renderRodage(); renderPlan(); renderNotes(); renderHist();
   $("#demo-note").hidden = true;
 }
 
@@ -1810,9 +1866,8 @@ function toast(msg, ms){
 
 function show(view){
   S.view = view;
-  const lbl = "Ajouter une commande ou un entretien";
-  $("#btn-new .lbl-long").textContent = lbl;
-  $("#btn-new").setAttribute("aria-label", lbl);
+  $("#btn-new .lbl-long").textContent = "Ajouter";
+  $("#btn-new").setAttribute("aria-label", "Ajouter une commande, un entretien ou une note");
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("is-active", v.id === "v-"+view));
   document.querySelectorAll(".dock [data-view]").forEach(b => {
     if(b.dataset.view === view) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
@@ -1934,7 +1989,7 @@ $("#o-quick").addEventListener("click", e => {
 });
 
 /* Liste des commandes : celles des deux mois précédant l'entretien d'abord, les commandes déjà liées sont signalées */
-let editOpId = null;
+let editOpId = null, opNoteId = null;
 function renderPicker(selected){
   const ds = $("#o-date").value, d = ds ? parseD(ds) : new Date();
   const linked = {};
@@ -1952,8 +2007,9 @@ $("#o-date").addEventListener("change", () => {
   renderPicker(new Set([...document.querySelectorAll("#o-achats input:checked")].map(i => i.value)));
 });
 
-function openOp(pre, op){
+function openOp(pre, op, fromNote){
   editOpId = op ? op.id : null;
+  opNoteId = !op && fromNote ? fromNote.id : null;
   $("#op-title").textContent = op ? "Modifier l'entretien" : "Nouvel entretien";
   $("#o-save").textContent = op ? "Enregistrer les modifications" : "Enregistrer l'entretien";
   const o = odoNow();
@@ -1961,7 +2017,7 @@ function openOp(pre, op){
   $("#o-km").value = op ? op.km : (o ? Math.round(o.km) : "");
   const items = new Set(op ? op.items : (pre ? [pre] : []));
   document.querySelectorAll("#o-items input").forEach(i => i.checked = items.has(i.value));
-  $("#o-autre").value = op ? op.autre : "";
+  $("#o-autre").value = op ? op.autre : (fromNote ? fromNote.texte.replace(/\s*\n+\s*/g, ", ") : "");
   $("#o-rodage").checked = op ? !!op.rodage : false;
   $("#o-note").value = op ? op.note : "";
   countSel();
@@ -2037,9 +2093,11 @@ $("#o-save").addEventListener("click", async () => {
     if(editOpId) await putDoc("operations", editOpId, data, "ops");
     else await addDoc("operations", data, "ops");
   }catch(err){ btn.disabled = false; return fail(errMsg(err), btn); }
+  const doneNote = editOpId ? null : opNoteId;
   btn.disabled = false; sheetOp.close();
-  toast(editOpId ? "Entretien modifié" : "Entretien enregistré");
-  editOpId = null;
+  if(doneNote){ try{ await delNote(doneNote); }catch(_){} }
+  toast(editOpId ? "Entretien modifié" : doneNote ? "Entretien enregistré, note retirée de la liste" : "Entretien enregistré");
+  editOpId = null; opNoteId = null;
 });
 $("#btn-manuel").addEventListener("click", e => {
   const open = $("#manuel").hidden;
@@ -2055,7 +2113,7 @@ sheetAdd.addEventListener("click", e => {
   if(e.target === sheetAdd){ sheetAdd.close(); return; }
   const b = e.target.closest("[data-add]"); if(!b) return;
   sheetAdd.close();
-  if(b.dataset.add === "entretien") openOp(); else openCommande();
+  if(b.dataset.add === "entretien") openOp(); else if(b.dataset.add === "note") openNote(); else openCommande();
 });
 const sheetAchat = $("#sheet-achat");
 sheetAchat.addEventListener("click", e => { if(e.target === sheetAchat) sheetAchat.close(); });
@@ -2159,6 +2217,7 @@ $("#dep-more").addEventListener("click", () => { S.depAll = !S.depAll; renderDep
 
 /* ---------- Stockage local sur le téléphone (IndexedDB) ---------- */
 S.mode = "local";
+S.notes = [];
 S.lastExport = null;
 S.persisted = null;
 const ACCEPT = {"application/pdf":"pdf", "image/jpeg":"jpg", "image/png":"png"};
@@ -2187,10 +2246,10 @@ const IDB = {
   open(){
     return new Promise((res, rej) => {
       if(!("indexedDB" in window)) return rej({code:"no_idb"});
-      const r = indexedDB.open("tdr125", 2);
+      const r = indexedDB.open("tdr125", 3);
       r.onupgradeneeded = () => {
         const d = r.result;
-        ["achats","operations","releves","fichiers","docs"].forEach(n => { if(!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:"id"}); });
+        ["achats","operations","releves","fichiers","docs","notes"].forEach(n => { if(!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:"id"}); });
         if(!d.objectStoreNames.contains("config")) d.createObjectStore("config");
       };
       r.onsuccess = () => { IDB.db = r.result; res(r.result); };
@@ -2268,7 +2327,8 @@ function saveConfig(){
   cfgT = setTimeout(() => IDB.write(["config"], st => st.config.put(configRaw(), "reglages")).catch(e => toast(errMsg(e))), 500);
 }
 async function loadAll(){
-  const [a, o, r, c] = await Promise.all([IDB.all("achats"), IDB.all("operations"), IDB.all("releves"), IDB.get("config", "reglages")]);
+  const [a, o, r, c, n] = await Promise.all([IDB.all("achats"), IDB.all("operations"), IDB.all("releves"), IDB.get("config", "reglages"), IDB.all("notes")]);
+  S.notes = n.map(x => fromNote(x.id, x)).filter(Boolean);
   S.entries = a.map(x => fromAchat(x.id, x)).filter(Boolean);
   S.ops = o.map(x => fromOp(x.id, x)).filter(Boolean);
   S.releves = r.map(x => fromReleve(x.id, x)).filter(Boolean);
@@ -2426,6 +2486,110 @@ $("#docs-list").addEventListener("click", ev => {
   const sh = ev.target.closest("[data-docshare]"); if(sh) openDoc(sh.dataset.docshare, true);
 });
 
+/* ---------- Notes à faire (onglet Mes entretiens) ---------- */
+function fromNote(id, x){
+  if(!x || typeof x.texte !== "string" || !x.texte.trim()) return null;
+  return {id:String(id), texte:x.texte.trim(), prio:x.prio === "urgent" ? "urgent" : "normal",
+    km:Number.isInteger(x.km) && x.km > 0 ? x.km : null, d:okDate(x.d) ? x.d : null, cree:+x.cree || 0};
+}
+/* Kilométrage moyen par jour, pour comparer une échéance en km à une échéance en date */
+function kmPerDay(){
+  const o = odoNow(), base = achat() || readings()[0];
+  if(o && base && o.date > base.date && o.km > base.km) return (o.km - base.km) / ((o.date - base.date) / 864e5);
+  return 10;
+}
+function noteState(n){
+  const o = odoNow(), today = new Date(); today.setHours(0,0,0,0);
+  const rKm = n.km !== null && o ? n.km - o.km : null;
+  const rJ = n.d ? Math.round((parseD(n.d) - today) / 864e5) : null;
+  const keys = [];
+  if(rKm !== null) keys.push(rKm / kmPerDay());
+  if(rJ !== null) keys.push(rJ);
+  const over = (rKm !== null && rKm <= 0) || (rJ !== null && rJ < 0);
+  const soon = !over && ((rKm !== null && rKm <= 300) || (rJ !== null && rJ <= 14));
+  const jTxt = j => j === 0 ? "aujourd'hui" : durTxt(j);
+  let rem = "";
+  if(over) rem = "Dépassée de " + [rKm !== null && rKm <= 0 ? kmFmt(-rKm) : null, rJ !== null && rJ < 0 ? durTxt(-rJ) : null].filter(Boolean).join(" et ");
+  else if(keys.length) rem = rJ === 0 && rKm === null ? "À faire aujourd'hui" : "Reste " + [rKm !== null ? kmFmt(rKm) : null, rJ !== null ? jTxt(rJ) : null].filter(Boolean).join(" ou ");
+  const ech = [n.km ? `avant ${kmFmt(n.km)}` : null, n.d ? `avant le ${dFull(parseD(n.d))}` : null].filter(Boolean).join(" ou ");
+  return {n, key:keys.length ? Math.min(...keys) : Infinity, st:over ? "over" : soon ? "soon" : keys.length ? "ok" : "none", rem, ech};
+}
+function renderNotes(){
+  const list = S.notes.map(noteState).sort((a,b) =>
+    (a.n.prio === "urgent" ? 0 : 1) - (b.n.prio === "urgent" ? 0 : 1) || a.key - b.key || a.n.cree - b.n.cree);
+  $("#notes-sum").textContent = list.length ? plural(list.length, "note") : "";
+  if(!list.length){
+    $("#notes").innerHTML = `<p class="small notes-empty">Rien à faire pour l'instant. Note ici les travaux à prévoir : une fois faits, ils passent dans l'historique.</p>`;
+    return;
+  }
+  $("#notes").innerHTML = list.map(s => `<article class="note st-${s.st}${s.n.prio === "urgent" ? " urgent" : ""}">
+      <div class="nt-main">
+        <div class="nt-txt">${esc(s.n.texte)}</div>
+        <div class="nt-meta">${s.n.prio === "urgent" ? '<span class="nt-prio">Urgent</span>' : ""}${s.ech ? `<span>${esc(cap(s.ech))}</span>` : ""}</div>
+        ${s.rem ? `<div class="nt-rem">${esc(s.rem)}</div>` : ""}
+        <div class="op-actions"><button type="button" class="op-edit" data-nedit="${esc(s.n.id)}">Modifier</button><button type="button" class="op-del" data-ndel="${esc(s.n.id)}">Supprimer</button></div>
+      </div>
+      <button type="button" class="nt-done" data-ndone="${esc(s.n.id)}">Fait</button>
+    </article>`).join("");
+}
+async function addNote(data){
+  const r = {...data, id:uid(), cree:Date.now()};
+  await IDB.write(["notes"], st => st.notes.put(r));
+  S.notes.push(fromNote(r.id, r)); askPersist(); scheduleRender();
+}
+async function putNote(id, data){
+  const old = S.notes.find(x => x.id === id);
+  const r = {...data, id, cree:old ? old.cree : Date.now()};
+  await IDB.write(["notes"], st => st.notes.put(r));
+  S.notes = S.notes.map(x => x.id === id ? fromNote(id, r) : x); scheduleRender();
+}
+async function delNote(id){
+  await IDB.write(["notes"], st => st.notes.delete(id));
+  S.notes = S.notes.filter(x => x.id !== id); scheduleRender();
+}
+const sheetNote = $("#sheet-note");
+sheetNote.addEventListener("click", e => { if(e.target === sheetNote) sheetNote.close(); });
+let editNoteId = null;
+function openNote(n){
+  editNoteId = n ? n.id : null;
+  $("#note-title").textContent = n ? "Modifier la note" : "Note à faire";
+  $("#n-save").textContent = n ? "Enregistrer les modifications" : "Enregistrer la note";
+  $("#n-texte").value = n ? n.texte : "";
+  document.querySelector(`input[name="nprio"][value="${n && n.prio === "urgent" ? "urgent" : "normal"}"]`).checked = true;
+  const o = odoNow();
+  $("#n-km").value = n && n.km ? n.km : "";
+  $("#n-km").placeholder = o ? `Compteur : ${nf.format(o.km)}` : "Ex. 34000";
+  $("#n-date").value = n && n.d ? n.d : "";
+  $("#n-err").textContent = "";
+  openDlg(sheetNote);
+  setTimeout(() => $("#n-texte").focus(), 30);
+}
+$("#n-save").addEventListener("click", async () => {
+  const texte = $("#n-texte").value.trim();
+  const kmTxt = $("#n-km").value.trim(), km = kmTxt ? parseKm(kmTxt) : null;
+  const d = $("#n-date").value || null;
+  const fail = (m, el) => { $("#n-err").textContent = m; if(el) el.focus(); };
+  if(!texte) return fail("Écris ce qu'il y a à faire.", $("#n-texte"));
+  if(kmTxt && !(km > 0)) return fail("Indique un kilométrage, par exemple 34000.", $("#n-km"));
+  const data = {texte, prio:document.querySelector('input[name="nprio"]:checked').value, km, d};
+  const btn = $("#n-save"); btn.disabled = true;
+  const wasEdit = !!editNoteId;
+  try{ if(wasEdit) await putNote(editNoteId, data); else await addNote(data); }
+  catch(err){ btn.disabled = false; return fail(errMsg(err), btn); }
+  btn.disabled = false; sheetNote.close(); editNoteId = null;
+  toast(wasEdit ? "Note modifiée" : "Note ajoutée");
+  if(!wasEdit && S.view !== "historique") show("historique");
+});
+$("#note-add").addEventListener("click", () => openNote());
+$("#notes").addEventListener("click", ev => {
+  const dn = ev.target.closest("[data-ndone]");
+  if(dn){ const n = S.notes.find(x => x.id === dn.dataset.ndone); if(n) openOp(null, null, n); return; }
+  const ed = ev.target.closest("[data-nedit]");
+  if(ed){ const n = S.notes.find(x => x.id === ed.dataset.nedit); if(n) openNote(n); return; }
+  const del = ev.target.closest("[data-ndel]"); if(!del) return;
+  confirmClick(del, () => delNote(del.dataset.ndel).then(() => toast("Note supprimée")).catch(err => toast(errMsg(err))));
+});
+
 /* ---------- Sauvegarde : export et import d'un fichier ---------- */
 const BACKUP_FORMAT = "tdr125-sauvegarde";
 const daysSince = iso => Math.floor((Date.now() - new Date(iso).getTime()) / 864e5);
@@ -2438,11 +2602,11 @@ function b64ToBlob(b64, type){
   return new Blob([u], {type});
 }
 async function buildBackup(){
-  const [a, o, r, f] = await Promise.all([IDB.all("achats"), IDB.all("operations"), IDB.all("releves"), IDB.all("fichiers")]);
+  const [a, o, r, f, n] = await Promise.all([IDB.all("achats"), IDB.all("operations"), IDB.all("releves"), IDB.all("fichiers"), IDB.all("notes")]);
   const fichiers = [];
   for(const x of f) fichiers.push({id:x.id, nom:x.nom, type:x.type, taille:x.taille, data:await blobToB64(x.blob)});
   const exporte = new Date().toISOString();
-  const payload = {format:BACKUP_FORMAT, version:1, exporte, config:{...configRaw(), lastExport:exporte}, achats:a, operations:o, releves:r, fichiers};
+  const payload = {format:BACKUP_FORMAT, version:1, exporte, config:{...configRaw(), lastExport:exporte}, achats:a, operations:o, releves:r, notes:n, fichiers};
   const name = `sauvegarde-tdr125-${isoD(new Date())}.json`;
   return {blob:new Blob([JSON.stringify(payload)], {type:"application/json"}), name, exporte};
 }
@@ -2477,14 +2641,16 @@ async function readBackup(file){
     achats: keep(p.achats, fromAchat),
     operations: keep(p.operations, fromOp),
     releves: keep(p.releves, fromReleve),
+    notes: keep(p.notes, fromNote),
     fichiers: (Array.isArray(p.fichiers) ? p.fichiers : []).filter(f => f && okAsset(f.id) && typeof f.data === "string")
   };
 }
 async function applyBackup(b){
   const files = b.fichiers.map(f => ({id:f.id, nom:String(f.nom || "facture"), type:String(f.type || "application/pdf"), taille:+f.taille || 0, blob:b64ToBlob(f.data, String(f.type || "application/pdf"))}));
   const cfg = {...(b.config || {}), lastExport:b.exporte || (b.config && b.config.lastExport) || null};
-  await IDB.write(["achats","operations","releves","fichiers","config"], st => {
-    ["achats","operations","releves","fichiers"].forEach(n => st[n].clear());
+  await IDB.write(["achats","operations","releves","fichiers","notes","config"], st => {
+    ["achats","operations","releves","fichiers","notes"].forEach(n => st[n].clear());
+    b.notes.forEach(x => st.notes.put(x));
     b.achats.forEach(x => st.achats.put(x));
     b.operations.forEach(x => st.operations.put(x));
     b.releves.forEach(x => st.releves.put(x));
@@ -2494,7 +2660,7 @@ async function applyBackup(b){
   await loadAll(); askPersist(); scheduleRender();
   toast(`Sauvegarde importée : ${plural(b.achats.length,"commande")}, ${plural(files.length,"facture")}, ${plural(b.operations.length,"opération")}`);
 }
-function hasData(){ return S.entries.length + S.ops.length + S.releves.length > 0; }
+function hasData(){ return S.entries.length + S.ops.length + S.releves.length + S.notes.length > 0; }
 function startImport(){ $("#imp-err").textContent = ""; $("#imp-file").click(); }
 $("#imp-file").addEventListener("change", async ev => {
   const f = ev.target.files[0]; ev.target.value = "";
@@ -2503,7 +2669,7 @@ $("#imp-file").addEventListener("change", async ev => {
   catch(e){ show("reglages"); $("#imp-err").textContent = errMsg(e); return; }
   if(!hasData()){ const b = pending; pending = null; try{ await applyBackup(b); }catch(e){ toast(errMsg(e)); } return; }
   show("reglages");
-  $("#imp-msg").textContent = `Cette sauvegarde (${plural(pending.achats.length,"commande")}, ${plural(pending.fichiers.length,"facture")}, ${plural(pending.operations.length,"opération")}${pending.exporte ? `, du ${dFull(new Date(pending.exporte))}` : ""}) va remplacer toutes les données actuelles du téléphone.`;
+  $("#imp-msg").textContent = `Cette sauvegarde (${plural(pending.achats.length,"commande")}, ${plural(pending.fichiers.length,"facture")}, ${plural(pending.operations.length,"opération")}${pending.notes.length ? `, ${plural(pending.notes.length,"note")}` : ""}${pending.exporte ? `, du ${dFull(new Date(pending.exporte))}` : ""}) va remplacer toutes les données actuelles du téléphone.`;
   $("#imp-confirm").hidden = false;
   $("#imp-confirm").scrollIntoView({block:"center"});
 });
@@ -2537,7 +2703,7 @@ function renderDataStatus(){
   const nf = S.entries.reduce((t,e) => t + e.factures.length, 0);
   const bytes = S.entries.reduce((t,e) => t + e.factures.reduce((u,f) => u + (+f.taille || 0), 0), 0);
   const docBytes = (S.docs || []).reduce((t,d) => t + d.taille, 0);
-  $("#data-status").textContent = `Stocké sur cet appareil : ${plural(S.entries.length,"commande")}, ${plural(nf,"facture")}${nf ? ` (${sizeTxt(bytes)})` : ""}, ${plural(S.ops.length,"opération")}, ${plural(S.releves.length,"relevé")}${S.docs && S.docs.length ? ` et ${plural(S.docs.length,"document")} technique${S.docs.length > 1 ? "s" : ""} (${sizeTxt(docBytes)})` : ""}.`
+  $("#data-status").textContent = `Stocké sur cet appareil : ${plural(S.entries.length,"commande")}, ${plural(nf,"facture")}${nf ? ` (${sizeTxt(bytes)})` : ""}, ${plural(S.ops.length,"opération")}, ${plural(S.notes.length,"note")}, ${plural(S.releves.length,"relevé")}${S.docs && S.docs.length ? ` et ${plural(S.docs.length,"document")} technique${S.docs.length > 1 ? "s" : ""} (${sizeTxt(docBytes)})` : ""}.`
     + (S.persisted === true ? " Stockage protégé contre le nettoyage automatique." : S.persisted === false ? " Le navigateur n'a pas accordé la protection du stockage : exporte régulièrement." : "");
   const d = S.lastExport ? daysSince(S.lastExport) : null;
   $("#backup-info").textContent = S.lastExport
