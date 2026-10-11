@@ -962,6 +962,7 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
     <!-- ===== ENTRETIEN (plan) ===== -->
     <section class="view" id="v-entretien" aria-labelledby="t-entretien">
       <h2 class="sec-title stencil" id="t-entretien">Entretien périodique</h2>
+      <p class="lede" id="entretien-date"></p>
       <div class="demo-note" id="demo-note" hidden><p></p><button type="button" class="btn-ghost" id="clear-demo">Effacer les exemples</button></div>
 
       <div class="holo mholo">
@@ -1979,8 +1980,7 @@ function renderMZReadout(zs){
     const c = {over:0,soon:0,never:0,ok:0}; zs.forEach(x => c[x.st]++);
     box.innerHTML = `<div class="ro-name stencil">Toute la moto</div>
       <div class="ro-amt">${[c.over && `${c.over} zone${c.over>1?"s":""} en retard`, c.soon && `${c.soon} à prévoir`].filter(Boolean).join(", ") || (c.never === zs.length ? "Rien renseigné" : "Rien en retard")}</div>
-      <div class="ro-meta">${plural(c.ok,"zone")} à jour${c.never ? `, ${c.never} à renseigner` : ""}</div>
-      <div class="ro-last">Touche un cercle pour voir les opérations de la zone.</div>`;
+      <div class="ro-meta">${plural(c.ok,"zone")} à jour${c.never ? `, ${c.never} à renseigner` : ""}</div>`;
     return;
   }
   const x = zs.find(v => v.z.id === zsel); if(!x) return;
@@ -2037,7 +2037,7 @@ function renderInsignia(){
 function renderHeader(){
   $("#bike-name").textContent = S.nom ? `Dit : ${S.nom}` : "";
   $("#since").textContent = "Suivi depuis " + S.debut.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-  $("#rapport-date").textContent = new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  $("#rapport-date").textContent = $("#entretien-date").textContent = new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
 }
 
 function renderAll(){
