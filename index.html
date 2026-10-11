@@ -944,7 +944,6 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
     <!-- ===== HISTORIQUE DES ENTRETIENS ===== -->
     <section class="view" id="v-historique" aria-labelledby="t-historique">
       <h2 class="sec-title stencil" id="t-historique">Mes entretiens</h2>
-      <p class="lede">Ce qui reste à faire, puis les entretiens réalisés avec les commandes utilisées.</p>
       <div class="sub-head"><h3 class="stencil">À faire</h3><span id="notes-sum"></span></div>
       <div id="notes"></div>
       <button type="button" class="btn-ghost note-add" id="note-add">Ajouter une note</button>
@@ -2519,7 +2518,7 @@ function renderNotes(){
     (a.n.prio === "urgent" ? 0 : 1) - (b.n.prio === "urgent" ? 0 : 1) || a.key - b.key || a.n.cree - b.n.cree);
   $("#notes-sum").textContent = list.length ? plural(list.length, "note") : "";
   if(!list.length){
-    $("#notes").innerHTML = `<p class="small notes-empty">Rien à faire pour l'instant. Note ici les travaux à prévoir : une fois faits, ils passent dans l'historique.</p>`;
+    $("#notes").innerHTML = "";
     return;
   }
   $("#notes").innerHTML = list.map(s => `<article class="note st-${s.st}${s.n.prio === "urgent" ? " urgent" : ""}">
