@@ -1975,10 +1975,15 @@ function renderMZReadout(zs){
   zs = zs || zoneStates();
   const box = $("#mreadout");
   if(!zsel){
-    const c = {over:0,soon:0,never:0,ok:0}; zs.forEach(x => c[x.st]++);
-    box.innerHTML = `<div class="ro-name stencil">Toute la moto</div>
-      <div class="ro-amt">${[c.over && `${c.over} zone${c.over>1?"s":""} en retard`, c.soon && `${c.soon} à prévoir`].filter(Boolean).join(", ") || (c.never === zs.length ? "Rien renseigné" : "Rien en retard")}</div>
-      <div class="ro-meta">${plural(c.ok,"zone")} à jour${c.never ? `, ${c.never} à renseigner` : ""}</div>`;
+    /* Sans zone choisie : l'opération la plus urgente (en retard d'abord, sinon la prochaine échéance) */
+    const sts = planStates().filter(x => x.st === "over" || x.st === "soon" || x.st === "ok");
+    const nx = sts[0];
+    if(!nx){ box.innerHTML = ""; return; }
+    const nOver = sts.filter(x => x.st === "over").length;
+    box.innerHTML = `<div class="ro-name stencil">${nx.st === "over" ? "En retard" : "Prochain entretien"}</div>
+      <div class="ro-amt">${esc(nx.p.nom)}</div>
+      <div class="ro-meta z-${nx.st}" style="color:var(--zc)">${esc(nx.rem)}${nOver > 1 ? `, et ${nOver - 1} autre${nOver > 2 ? "s" : ""} en retard` : ""}</div>
+      <div class="zo-a"><button type="button" class="hlink" data-goplan="${nx.p.id}">Voir dans le tableau</button></div>`;
     return;
   }
   const x = zs.find(v => v.z.id === zsel); if(!x) return;
