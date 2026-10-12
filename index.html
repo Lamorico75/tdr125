@@ -396,6 +396,10 @@ main{padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));max-width:1
 .chip[aria-pressed="true"],.segb[aria-pressed="true"]{background:var(--unit);border-color:var(--unit);color:#fff}
 .seg{display:flex;flex-wrap:wrap}
 .segb + .segb{margin-left:-1.5px}
+/* Filtres d'utilité et d'historique : toujours sur une seule ligne */
+#segU,#hist-filter{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+#segU .segb,#hist-filter .segb{flex:1 1 auto;padding:7px 8px;text-align:center}
+@media (max-width:420px){ #segU .segb,#hist-filter .segb{font-size:.8rem;padding:7px 5px} }
 #v-journal .filters,#jlist,#dlist{max-width:900px}
 .j-sum{margin:6px 0 4px;color:var(--on-hangar-soft);font-size:.9rem}
 .month-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:22px 0 8px}
@@ -1299,6 +1303,7 @@ const CATS = [
   {id:"Consommable",       x:468.9,y:195.5, lx:760,ly:160,a:"middle",ex:700,ey:166},
   {id:"Esthétique",        x:437.8,y:113.6, lx:340,ly:60,a:"middle",ex:368,ey:66},
   {id:"Guidon",            x:460.4,y:75.8, lx:640,ly:40,a:"start",ex:634,ey:34},
+  {id:"Éclairage",         x:583,  y:150,  lx:738,ly:205,a:"start",ex:732,ey:198},
   {id:"Pot d'échappement", x:206.3,y:187.1, lx:-20,ly:90,a:"start",ex:140,ey:96}
 ];
 /* Insignes originaux : pot de détente à soudures segmentées (géométrie précalculée) */
@@ -1490,7 +1495,7 @@ function renderSpark(){
 
 /* ---------- Répartition des commandes (camembert) ---------- */
 const CAT_COLORS = {"Moteur":"#1C3E78","Frein":"#2B5DAE","Carburation":"#4FA3D9","Fourche":"#7FD5FF","Cycle":"#8EABD8",
-  "Consommable":"#E89B2D","Esthétique":"#D2611B","Guidon":"#5E6B7A","Pot d'échappement":"#B8C7D9"};
+  "Consommable":"#E89B2D","Esthétique":"#D2611B","Guidon":"#5E6B7A","Pot d'échappement":"#B8C7D9","Éclairage":"#F2C14E"};
 function renderPie(){
   const m = {};
   S.entries.forEach(e => { m[e.cat] = (m[e.cat] || 0) + e.prix; });
