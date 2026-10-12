@@ -785,6 +785,11 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
   .mholo .readout{border-bottom:0;border-right:1px solid var(--holo-faint);padding-right:14px}
   .mholo .bike{max-height:420px}
 }
+.mholo .bike text{font-size:17px}
+@media (min-width:900px){
+  .mholo .holo-side{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+  .mholo #mzlist{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+}
 .zleg{display:flex;flex-wrap:wrap;gap:4px 14px;padding:0 6px;font-size:.78rem;color:var(--holo-txt)}
 .zleg span{display:inline-flex;align-items:center;gap:6px}
 .zleg i{width:10px;height:10px;border-radius:50%;background:var(--zc);display:inline-block}
@@ -979,7 +984,7 @@ table.mt{border-collapse:collapse;width:100%;min-width:330px;font-size:.74rem;li
             </g>
             <g id="mmarkers"></g>
           </svg>
-          <div class="zleg" aria-hidden="true"><span class="z-over"><i></i>Dépassé</span><span class="z-soon"><i></i>À prévoir</span><span class="z-ok"><i></i>À jour</span><span class="z-never"><i></i>À renseigner</span></div>
+          <div class="zleg" aria-hidden="true"><span class="z-over"><i></i>Dépassé</span><span class="z-soon"><i></i>À prévoir</span><span class="z-ok"><i></i>À jour</span></div>
         </div>
         <aside class="holo-side" aria-label="Détail par zone">
           <div class="readout" id="mreadout" aria-live="polite"></div>
@@ -1728,13 +1733,13 @@ function planState(p){
     /* Rien noté depuis l'achat : au mieux, l'opération a été faite juste avant l'achat.
        Si l'intervalle est déjà écoulé depuis l'achat, elle est forcément en retard. */
     const a = achat();
-    if(!a || !o) return {p, last, st:"never", frac:-1, rem:"Jamais renseigné"};
+    if(!a || !o) return {p, last, st:"soon", unk:true, frac:-1, rem:"Jamais renseigné"};
     const runKm = Math.max(0, o.km - a.km), runJ = Math.max(0, Math.round((now - a.date)/864e5));
     const fk0 = p.km ? runKm/p.km : 0;
     const ft0 = p.mois ? (now - a.date)/(addMonths(a.date, p.mois) - a.date) : 0;
     if(Math.max(fk0, ft0) >= 1)
       return {p, last, st:"over", frac:Math.max(fk0, ft0), rem:`Rien noté depuis l'achat (${p.km && fk0 >= ft0 ? kmFmt(runKm) : durTxt(runJ)})`};
-    return {p, last, st:"never", frac:-1, rem:"Rien noté depuis l'achat"};
+    return {p, last, st:"soon", unk:true, frac:-1, rem:"Rien noté depuis l'achat"};
   }
   const fk = p.km && o ? Math.max(0, o.km - last.km)/p.km : 0;
   const due = p.mois ? addMonths(last.date, p.mois) : null;
@@ -1844,7 +1849,7 @@ function renderPlan(){
         </div>
         <div class="pr-side">
           <span class="pc-st">${ST[s.st].l}</span>
-          ${s.rem && s.st !== "never" ? `<span class="pr-rem">${s.rem}</span>` : ""}
+          ${s.rem && !s.unk ? `<span class="pr-rem">${s.rem}</span>` : ""}
           <button type="button" class="pc-do" data-plan="${s.p.id}">Fait</button>
         </div>
       </div>`).join("")}
@@ -1929,18 +1934,24 @@ function renderMaintSummary(){
 
 /* ---------- Hologramme d'entretien : zones de la moto et numéros du tableau du manuel ---------- */
 const ZONES = [
-  {id:"moteur",  nom:"Moteur et alimentation",       nums:[1,2,3,19,20], x:392,y:243, lx:300,ly:40, a:"middle",ex:330,ey:48},
-  {id:"boite",   nom:"Boîte et embrayage",           nums:[4,21],        x:440,y:288, lx:347,ly:425,a:"start", ex:430,ey:404},
-  {id:"refroid", nom:"Refroidissement",              nums:[22],          x:487,y:302, lx:567,ly:425,a:"start", ex:600,ey:404},
-  {id:"chaine",  nom:"Chaîne",                       nums:[12],          x:262,y:298, lx:-20,ly:250,a:"start", ex:60, ey:256},
-  {id:"suspar",  nom:"Bras oscillant et amortisseur",nums:[11,18],       x:318,y:262, lx:-20,ly:92, a:"start", ex:200,ey:98},
-  {id:"freinar", nom:"Frein arrière",                nums:[6,7,"N.B."],  x:205,y:318, lx:-20,ly:425,a:"start", ex:100,ey:404},
-  {id:"cadre",   nom:"Cadre et béquille",            nums:[14,15,16],    x:350,y:330, lx:140,ly:425,a:"start", ex:300,ey:404},
-  {id:"roues",   nom:"Roues et pneus",               nums:[8,9,10],      x:668,y:352, lx:880,ly:400,a:"end",   ex:820,ey:380},
-  {id:"freinav", nom:"Frein avant",                  nums:[5,7,"N.B."],  x:582,y:300, lx:880,ly:300,a:"end",   ex:740,ey:294},
-  {id:"direction",nom:"Direction et fourche",        nums:[13,17],       x:548,y:212, lx:880,ly:200,a:"end",   ex:700,ey:194},
-  {id:"elec",    nom:"Électricité et éclairage",     nums:[23,25],       x:592,y:128, lx:880,ly:130,a:"end",   ex:640,ey:124},
-  {id:"cables",  nom:"Câbles et commandes",          nums:[24],          x:478,y:76,  lx:600,ly:30, a:"middle",ex:540,ey:38}
+  /* x,y : point sur la photo ; lx,ly : étiquette (ordinateur) ; ex,ey : fin du trait vers l'étiquette */
+  {id:"carbu",    nom:"Carburation et durits",      lab:"Carburation",      nums:[1,19],        x:380,y:240, lx:92, ly:30, a:"start", ex:196,ey:25},
+  {id:"bougie",   nom:"Bougie",                     lab:"Bougie",           nums:[2],           x:440,y:236, lx:208,ly:30, a:"start", ex:268,ey:25},
+  {id:"filtre",   nom:"Filtre à air",               lab:"Filtre à air",     nums:[3],           x:312,y:198, lx:-20,ly:30, a:"start", ex:80, ey:25},
+  {id:"autolube", nom:"Pompe Autolube",             lab:"Autolube",         nums:[20],          x:365,y:290, lx:440,ly:425,a:"start", ex:477,ey:408},
+  {id:"boite",    nom:"Boîte et embrayage",         lab:"Boîte, embrayage", nums:[4,21],        x:420,y:288, lx:540,ly:425,a:"start", ex:615,ey:408},
+  {id:"refroid",  nom:"Refroidissement",            lab:"Refroidissement",  nums:[22],          x:490,y:188, lx:280,ly:30, a:"start", ex:417,ey:25},
+  {id:"chaine",   nom:"Chaîne",                     lab:"Chaîne",           nums:[12],          x:235,y:278, lx:-20,ly:245,a:"start", ex:42, ey:240},
+  {id:"bras",     nom:"Bras oscillant",             lab:"Bras oscillant",   nums:[11],          x:290,y:300, lx:120,ly:425,a:"start", ex:186,ey:408},
+  {id:"amort",    nom:"Amortisseur arrière",        lab:"Amortisseur",      nums:[18],          x:312,y:262, lx:-20,ly:58, a:"start", ex:86, ey:53},
+  {id:"freinar",  nom:"Frein arrière",              lab:"Frein arrière",    nums:[6,7,"N.B."],  x:215,y:335, lx:-20,ly:425,a:"start", ex:41, ey:408},
+  {id:"cadre",    nom:"Cadre et béquille",          lab:"Cadre, béquille",  nums:[14,15,16],    x:340,y:328, lx:275,ly:425,a:"start", ex:345,ey:408},
+  {id:"roues",    nom:"Roues et pneus",             lab:"Roues et pneus",   nums:[8,9,10],      x:672,y:380, lx:880,ly:340,a:"end",   ex:743,ey:334},
+  {id:"freinav",  nom:"Frein avant",                lab:"Frein avant",      nums:[5,7,"N.B."],  x:568,y:298, lx:880,ly:280,a:"end",   ex:771,ey:274},
+  {id:"fourche",  nom:"Fourche",                    lab:"Fourche",          nums:[17],          x:575,y:238, lx:880,ly:215,a:"end",   ex:809,ey:209},
+  {id:"direction",nom:"Direction",                  lab:"Direction",        nums:[13],          x:543,y:160, lx:880,ly:150,a:"end",   ex:790,ey:144},
+  {id:"elec",     nom:"Éclairage et contacteurs",   lab:"Éclairage, contacteurs", nums:[23,25], x:588,y:110, lx:880,ly:88, a:"end",   ex:668,ey:82},
+  {id:"cables",   nom:"Câbles et commandes",        lab:"Câbles, commandes",nums:[24],          x:495,y:72,  lx:600,ly:30, a:"start", ex:595,ey:24}
 ];
 const ZORD = {over:0, soon:1, never:2, ok:3};
 function zoneStates(){
@@ -1961,17 +1972,17 @@ function renderMZ(){
     const on = z.id === zsel, r = mqSmall.matches ? 14 : 11;
     return `<g class="mk z-${st}${on ? " is-sel" : ""}" data-zone="${z.id}" tabindex="0" role="button" aria-pressed="${on}" aria-label="${esc(z.nom)}, ${ST[st].l}">
       <line class="lead" x1="${z.x}" y1="${z.y}" x2="${z.ex}" y2="${z.ey}"/>
-      <circle class="hit" cx="${z.x}" cy="${z.y}" r="26"/>
+      <circle class="hit" cx="${z.x}" cy="${z.y}" r="22"/>
       <circle class="ring" cx="${z.x}" cy="${z.y}" r="${r}"/>
       <circle class="dot" cx="${z.x}" cy="${z.y}" r="${r}"/>
-      <text x="${z.lx}" y="${z.ly}" text-anchor="${z.a}">${esc(z.nom)}</text>
+      <text x="${z.lx}" y="${z.ly}" text-anchor="${z.a}">${esc(z.lab)}</text>
     </g>`;
   }).join("");
   $("#mzlist").innerHTML = [...zs].sort((a,b) => ZORD[a.st] - ZORD[b.st] || b.frac - a.frac).map(({z, st, frac}) => {
     const on = z.id === zsel;
     return `<button type="button" class="sys zsys z-${st}${on ? " is-sel" : ""}" data-zone="${z.id}" aria-pressed="${on}">
       <span>${esc(z.nom)}</span><span class="sys-v">${ST[st].l}</span>
-      <span class="sys-bar" style="--w:${st === "never" ? 0 : Math.min(100, frac*100).toFixed(0)}%"></span>
+      <span class="sys-bar" style="--w:${Math.max(0, Math.min(100, frac*100)).toFixed(0)}%"></span>
     </button>`;
   }).join("");
   renderMZReadout(zs);
@@ -1981,13 +1992,14 @@ function renderMZReadout(zs){
   const box = $("#mreadout");
   if(!zsel){
     /* Sans zone choisie : l'opération la plus urgente (en retard d'abord, sinon la prochaine échéance) */
-    const sts = planStates().filter(x => x.st === "over" || x.st === "soon" || x.st === "ok");
+    const all = planStates();
+    const sts = [...all.filter(x => !x.unk), ...all.filter(x => x.unk)];
     const nx = sts[0];
     if(!nx){ box.innerHTML = ""; return; }
     const nOver = sts.filter(x => x.st === "over").length;
     box.innerHTML = `<div class="ro-name stencil">${nx.st === "over" ? "En retard" : "Prochain entretien"}</div>
       <div class="ro-amt">${esc(nx.p.nom)}</div>
-      <div class="ro-meta z-${nx.st}" style="color:var(--zc)">${esc(nx.rem)}${nOver > 1 ? `, et ${nOver - 1} autre${nOver > 2 ? "s" : ""} en retard` : ""}</div>
+      <div class="ro-meta z-${nx.st}" style="color:var(--zc)">${esc(nx.unk ? "À prévoir : " + nx.rem.toLowerCase() : nx.rem)}${nOver > 1 ? `, et ${nOver - 1} autre${nOver > 2 ? "s" : ""} en retard` : ""}</div>
       <div class="zo-a"><button type="button" class="hlink" data-goplan="${nx.p.id}">Voir dans le tableau</button></div>`;
     return;
   }
@@ -1997,7 +2009,7 @@ function renderMZReadout(zs){
     <div class="ro-meta z-${x.st}" style="color:var(--zc)">${ST[x.st].l}</div>
     <ul class="zops">${rows.map(r => `<li class="z-${r.st === "cond" ? "ok" : r.st}">
       <div class="zo-n">${esc(r.p.nom)}</div>
-      <div class="zo-s"><b>${ST[r.st].l}</b>${r.rem && r.st !== "never" ? `, ${esc(r.rem)}` : ""}${r.last ? `. Fait le ${dFull(r.last.date)} à ${kmFmt(r.last.km)}` : ""}</div>
+      <div class="zo-s"><b>${ST[r.st].l}</b>${r.rem ? `, ${esc(r.unk ? r.rem.toLowerCase() : r.rem)}` : ""}${r.last ? `. Fait le ${dFull(r.last.date)} à ${kmFmt(r.last.km)}` : ""}</div>
       <div class="zo-a"><button type="button" class="hlink" data-goplan="${r.p.id}">Voir dans le tableau</button>${r.last ? `<button type="button" class="hlink" data-goop="${esc(r.last.id)}">Voir dans Mes entretiens</button>` : ""}</div>
     </li>`).join("")}</ul>`;
 }
